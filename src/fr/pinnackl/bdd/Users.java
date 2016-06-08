@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.pinnackl.bcrypt.BCrypt;
 import fr.pinnackl.beans.User;
 
 public class Users {
@@ -34,6 +35,15 @@ public class Users {
 		}
 	}
 
+	private User getUser(String pseudo) {
+		for (User u : getUsers()) {
+			if (u.getPseudo().equals(pseudo)) {
+				return u;
+			}
+		}
+		return null;
+	}
+
 	public List<User> getUsers() {
 		List<User> users = new ArrayList<User>();
 
@@ -47,14 +57,16 @@ public class Users {
 
 			statement = connection.createStatement();
 
-			result = statement.executeQuery("SELECT pseudo FROM users;");
+			result = statement.executeQuery("SELECT pseudo, password FROM users;");
 
 			// Retrieve Datas
 			while (result.next()) {
 				String pseudo = result.getString("pseudo");
+				String password = result.getString("password");
 
 				User user = new User();
 				user.setPseudo(pseudo);
+				user.setPassword(password);
 
 				users.add(user);
 
@@ -78,6 +90,19 @@ public class Users {
 		return users;
 	}
 
+	public List<User> getAllUsers() {
+		List<User> allUsers = new ArrayList<User>();
+
+		for (User u : getUsers()) {
+			User user = new User();
+			user.setPseudo(u.getPseudo());
+
+			allUsers.add(user);
+		}
+
+		return allUsers;
+	}
+
 	public void createUser(User user) {
 
 		loadDatabase();
@@ -94,6 +119,18 @@ public class Users {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public boolean checkPseudo(String pseudo) {
+		return (this.getUser(pseudo) != null);
+	}
+
+	public boolean checkPseudoWithPassword(String pseudo, String password) {
+		User u = this.getUser(pseudo);
+		if (u != null) {
+			return BCrypt.checkpw(password, u.getPassword());
+		}
+		return false;
 	}
 
 }

@@ -19,6 +19,7 @@ import fr.pinnackl.beans.User;
 		"/list", "/home", "/logout", "/change" })
 public class PinnacklServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String USER_SESSION = "userSession";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -65,7 +66,34 @@ public class PinnacklServlet extends HttpServlet {
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		final String pseudo = request.getParameter("pseudo");
+		final String password = request.getParameter("password");
 
+		User user = new User();
+		Users usersDB = new Users();
+
+		if (pseudo == null || password == null) {
+			// Display form
+		} else if (pseudo.isEmpty() || password.isEmpty()) {
+			request.setAttribute("errorMessage", "Set username and password");
+		} else if (usersDB.checkPseudo(pseudo)) {
+			if (usersDB.checkPseudoWithPassword(pseudo, password)) {
+				user.setPseudo(pseudo);
+				user.setPassword(password);
+
+				request.getSession().setAttribute(USER_SESSION, user);
+
+				response.sendRedirect("home");
+				return;
+			} else {
+				request.setAttribute("errorMessage", "Bad password");
+			}
+		} else {
+			request.setAttribute("errorMessage", "User not found");
+		}
+		request.setAttribute("action", "login");
+		request.setAttribute("title", "Login");
+		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -78,6 +106,8 @@ public class PinnacklServlet extends HttpServlet {
 		if (pseudo != null && password != null) {
 			if (pseudo.isEmpty() || password.isEmpty()) {
 				request.setAttribute("errorMessage", "Set username and password");
+			} else if (usersDB.checkPseudo(pseudo)) {
+				request.setAttribute("errorMessage", "User already exists. Please chose another");
 			} else {
 				user.setPseudo(pseudo);
 				user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
@@ -95,7 +125,7 @@ public class PinnacklServlet extends HttpServlet {
 		Users usersDB = new Users();
 
 		request.setAttribute("title", "List of All Users");
-		request.setAttribute("userList", usersDB.getUsers());
+		request.setAttribute("userList", usersDB.getAllUsers());
 
 		request.getRequestDispatcher("/WEB-INF/html/userList.jsp").forward(request, response);
 	}
