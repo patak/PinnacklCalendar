@@ -121,6 +121,24 @@ public class Users {
 		}
 	}
 
+	public void updateUserPassword(User user) {
+
+		loadDatabase();
+
+		try {
+			PreparedStatement preparedStatement = connection
+					.prepareStatement("UPDATE users SET password = ? WHERE pseudo = ?;");
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getPseudo());
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public boolean checkPseudo(String pseudo) {
 		return (this.getUser(pseudo) != null);
 	}

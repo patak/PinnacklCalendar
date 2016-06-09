@@ -42,17 +42,15 @@ public class PinnacklServlet extends HttpServlet {
 			this.list(request, response);
 		} else if (uri.contains("/create")) {
 			this.create(request, response);
+		} else if (uri.contains("/home")) {
+			this.home(request, response);
+		} else if (uri.contains("/logout")) {
+			this.logout(request, response);
+		} else if (uri.contains("/change")) {
+			this.change(request, response);
+		} else {
+			this.home(request, response);
 		}
-
-		// else if(uri.contains("/home")) {
-		// this.home(request, response);
-		// }else if(uri.contains("/logout")) {
-		// this.logout(request, response);
-		// }else if(uri.contains("/change")) {
-		// this.change(request, response);
-		// }else {
-		// this.home(request, response);
-		// }
 	}
 
 	/**
@@ -63,6 +61,16 @@ public class PinnacklServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+	}
+
+	private void home(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if (request.getSession().getAttribute(USER_SESSION) == null)
+			response.sendRedirect("login");
+		else {
+			User user = (User) request.getSession().getAttribute(USER_SESSION);
+			request.setAttribute("login", user.getPseudo());
+			request.getRequestDispatcher("/WEB-INF/html/home.jsp").forward(request, response);
+		}
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -128,6 +136,46 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("userList", usersDB.getAllUsers());
 
 		request.getRequestDispatcher("/WEB-INF/html/userList.jsp").forward(request, response);
+	}
+
+	private void change(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if (request.getSession().getAttribute(USER_SESSION) == null) {
+			response.sendRedirect("login");
+			return;
+		}
+
+		final String pseudo = request.getParameter("pseudo");
+		final String password = request.getParameter("password");
+		final String newPassword = request.getParameter("newPassword");
+		final String confirmNewPassword = request.getParameter("confirmNewPassword");
+
+		if (newPassword == null || confirmNewPassword == null) {
+			// just display the login
+		} else if (newPassword.isEmpty() || confirmNewPassword.isEmpty()) {
+			request.setAttribute("errorMessage", "Set new password");
+		} else {
+			if (newPassword.equals(confirmNewPassword)) {
+
+				User user = (User) request.getSession().getAttribute(USER_SESSION);
+				user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
+
+				Users usersDB = new Users();
+				usersDB.updateUserPassword(user);
+
+				request.setAttribute("success", "Password changed");
+			} else {
+				request.setAttribute("errorMessage", "New passwords not identical");
+			}
+		}
+		request.setAttribute("action", "change");
+		request.setAttribute("title", "Change password");
+		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+	}
+
+	private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if (request.getSession().getAttribute(USER_SESSION) != null)
+			request.getSession().removeAttribute(USER_SESSION);
+		response.sendRedirect("login");
 	}
 
 }
