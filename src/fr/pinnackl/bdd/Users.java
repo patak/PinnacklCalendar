@@ -28,11 +28,7 @@ public class Users {
 		// DB Connection
 		Statement statement = null;
 		ResultSet result = null;
-		try {
-			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javaee", "root", "");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		connection = new Config().getConnection();
 	}
 
 	private User getUser(String pseudo) {
