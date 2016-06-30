@@ -23,7 +23,7 @@ import fr.pinnackl.beans.User;
  * Servlet implementation class PinnacklServlet
  */
 @WebServlet(name = "pinnackl-servlet", description = "Servlet handling pinnackl project", urlPatterns = { "/login",
-		"/create", "/list", "/home", "/logout", "/change", "/add" })
+		"/create", "/list", "/home", "/logout", "/change", "/add", "/events" })
 @MultipartConfig(maxFileSize = 16177215) // upload file's size up to 16MB
 public class PinnacklServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -58,6 +58,8 @@ public class PinnacklServlet extends HttpServlet {
 			this.change(request, response);
 		} else if (uri.contains("/add")) {
 			this.add(request, response);
+		} else if (uri.contains("/events")) {
+			this.events(request, response);
 		} else {
 			this.home(request, response);
 		}
@@ -239,8 +241,6 @@ public class PinnacklServlet extends HttpServlet {
 						if (photoRequest.getContentType() != "image/jpeg"
 								|| photoRequest.getContentType() != "image/png") {
 							request.setAttribute("errorMessage", "Wrong file format");
-						} else {
-
 						}
 						photo = photoRequest.getInputStream();
 					}
@@ -264,6 +264,15 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("title", "Add Event");
 		request.setAttribute("createTab", "active");
 		request.getRequestDispatcher("/WEB-INF/html/eventForm.jsp").forward(request, response);
+	}
+
+	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		Events eventsDB = new Events();
+
+		request.setAttribute("title", "Event");
+		request.setAttribute("userList", eventsDB.getEvents());
+		request.setAttribute("listTab", "active");
+		request.getRequestDispatcher("/WEB-INF/html/eventList.jsp").forward(request, response);
 	}
 
 }
