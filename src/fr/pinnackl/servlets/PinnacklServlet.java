@@ -236,6 +236,7 @@ public class PinnacklServlet extends HttpServlet {
 						try {
 							finishDate = simpleDateFormat.parse(finishDateRequest);
 							if (finishDate.before(startDate)) {
+								request.setAttribute("errorMessage", "Wrong finish date");
 							}
 						} catch (Exception e) {
 							request.setAttribute("errorMessage", "Wrong date format");
