@@ -50,7 +50,7 @@
 		  </div>
 		  
 		  <div class="form-group">
-			  <div class="col-sm-10">
+			  <div class="col-sm-8 col-md-offset-2">
 			  	<span id="text_latlng"></span>
 			  	<div id="map-canvas" style="height:300px;width:100%"></div>
 			  </div>
