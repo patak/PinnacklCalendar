@@ -103,7 +103,7 @@ public class Events {
 				Blob photo = result.getBlob("photo");
 
 				Event event = new Event();
-				event.add(event);
+				events.add(event);
 
 			}
 		} catch (SQLException e) {
