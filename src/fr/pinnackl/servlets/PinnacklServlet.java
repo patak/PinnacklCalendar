@@ -211,6 +211,8 @@ public class PinnacklServlet extends HttpServlet {
 			Date finishDate = null;
 			InputStream photo = null; // input stream of the upload file
 
+			Date currentDate = new Date();
+
 			Event event = new Event();
 			Events eventsDB = new Events();
 
@@ -224,12 +226,17 @@ public class PinnacklServlet extends HttpServlet {
 					}
 					try {
 						startDate = simpleDateFormat.parse(startDateRequest);
+						if (startDate.before(currentDate)) {
+							request.setAttribute("errorMessage", "Wrong start date");
+						}
 					} catch (Exception e) {
 						request.setAttribute("errorMessage", "Wrong date format");
 					}
 					if (finishDateRequest.length() > 0) {
 						try {
 							finishDate = simpleDateFormat.parse(finishDateRequest);
+							if (finishDate.before(startDate)) {
+							}
 						} catch (Exception e) {
 							request.setAttribute("errorMessage", "Wrong date format");
 						}
