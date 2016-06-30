@@ -3,16 +3,8 @@
 <jsp:directive.page import="java.util.List" />
 
 <jsp:directive.include file="header.jsp"/>
-	<div id="calendar"></div>
-<script>
-$(document).ready(function() {
-
-    // page is now ready, initialize the calendar...
-
-    $('#calendar').fullCalendar({
-        // put your options and callbacks here
-    });
-
-});
-</script>
+	<button id="prevButton">Previous</button>
+	<button id="nextButton">Next</button>
+	<div id="calendar">
+	</div>
 <jsp:directive.include file="footer.jsp"/>

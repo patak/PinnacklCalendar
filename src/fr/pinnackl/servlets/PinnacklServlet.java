@@ -269,10 +269,10 @@ public class PinnacklServlet extends HttpServlet {
 	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		Events eventsDB = new Events();
 
-		request.setAttribute("title", "Event");
-		request.setAttribute("userList", eventsDB.getEvents());
-		request.setAttribute("listTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/eventList.jsp").forward(request, response);
+		// request.setAttribute("title", "Event");
+		// request.setAttribute("userList", eventsDB.getEvents());
+		// request.setAttribute("listTab", "active");
+		request.getRequestDispatcher("/WEB-INF/html/eventCalendar.jsp").forward(request, response);
 	}
 
 }
