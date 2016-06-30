@@ -1,9 +1,14 @@
 package fr.pinnackl.bdd;
 
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.pinnackl.beans.Event;
 
@@ -69,5 +74,54 @@ public class Events {
 				// TODO: handle exception
 			}
 		}
+	}
+
+	public List<Event> getEvents() {
+		List<Event> events = new ArrayList<Event>();
+
+		// DB Connection
+		Statement statement = null;
+		ResultSet result = null;
+
+		loadDatabase();
+
+		try {
+
+			statement = connection.createStatement();
+
+			result = statement.executeQuery("SELECT * FROM events;");
+
+			// Retrieve Datas
+			while (result.next()) {
+				Integer id = result.getInt("event_id");
+				String name = result.getString("name");
+				String place = result.getString("place");
+				Double latitudeRequest = result.getDouble("latitude");
+				Double longitudeRequest = result.getDouble("longitude");
+				Date startDate = result.getDate("startDate");
+				Date finishDate = result.getDate("finishDate");
+				Blob photo = result.getBlob("photo");
+
+				Event event = new Event();
+				event.add(event);
+
+			}
+		} catch (SQLException e) {
+			// TODO: handle exception
+		} finally {
+			// Close Connection
+			try {
+				if (result != null)
+					result.close();
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e2) {
+				// TODO: handle exception
+			}
+		}
+		return events;
 	}
 }
