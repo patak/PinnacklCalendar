@@ -1,7 +1,6 @@
 package fr.pinnackl.bdd;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,18 +25,67 @@ public class Users {
 		}
 
 		// DB Connection
-		Statement statement = null;
-		ResultSet result = null;
 		connection = new Config().getConnection();
 	}
 
-	private User getUser(String pseudo) {
-		for (User u : getUsers()) {
-			if (u.getPseudo().equals(pseudo)) {
-				return u;
+	public void createUser(User user) {
+
+		PreparedStatement preparedStatement = null;
+
+		loadDatabase();
+
+		try {
+			preparedStatement = connection.prepareStatement("INSERT INTO users(pseudo, password) VALUES(?, ?);");
+			preparedStatement.setString(1, user.getPseudo());
+			preparedStatement.setString(2, user.getPassword());
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Close Connection
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e2) {
+				// TODO: handle exception
 			}
 		}
-		return null;
+	}
+
+	public void updateUserPassword(User user) {
+
+		PreparedStatement preparedStatement = null;
+
+		loadDatabase();
+
+		try {
+			preparedStatement = connection.prepareStatement("UPDATE users SET password = ? WHERE pseudo = ?;");
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getPseudo());
+
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Close Connection
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e2) {
+				// TODO: handle exception
+			}
+		}
 	}
 
 	public List<User> getUsers() {
@@ -53,14 +101,16 @@ public class Users {
 
 			statement = connection.createStatement();
 
-			result = statement.executeQuery("SELECT pseudo, password FROM users;");
+			result = statement.executeQuery("SELECT user_id, pseudo, password FROM users;");
 
 			// Retrieve Datas
 			while (result.next()) {
+				Integer id = result.getInt("user_id");
 				String pseudo = result.getString("pseudo");
 				String password = result.getString("password");
 
 				User user = new User();
+				user.setId(id);
 				user.setPseudo(pseudo);
 				user.setPassword(password);
 
@@ -99,40 +149,13 @@ public class Users {
 		return allUsers;
 	}
 
-	public void createUser(User user) {
-
-		loadDatabase();
-
-		try {
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("INSERT INTO users(pseudo, password) VALUES(?, ?);");
-			preparedStatement.setString(1, user.getPseudo());
-			preparedStatement.setString(2, user.getPassword());
-
-			preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public User getUser(String pseudo) {
+		for (User u : getUsers()) {
+			if (u.getPseudo().equals(pseudo)) {
+				return u;
+			}
 		}
-	}
-
-	public void updateUserPassword(User user) {
-
-		loadDatabase();
-
-		try {
-			PreparedStatement preparedStatement = connection
-					.prepareStatement("UPDATE users SET password = ? WHERE pseudo = ?;");
-			preparedStatement.setString(1, user.getPassword());
-			preparedStatement.setString(2, user.getPseudo());
-
-			preparedStatement.executeUpdate();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return null;
 	}
 
 	public boolean checkPseudo(String pseudo) {
