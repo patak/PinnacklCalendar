@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import fr.pinnackl.beans.User;
  */
 @WebServlet(name = "event-servlet", description = "Servlet handling events for pinnackl project", urlPatterns = {
 		"/add", "/events" })
+@MultipartConfig(maxFileSize = 1024 * 1024 * 16)
 public class EventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String USER_SESSION = "userSession";
@@ -62,7 +64,9 @@ public class EventServlet extends HttpServlet {
 		if (request.getSession().getAttribute(USER_SESSION) == null)
 			response.sendRedirect("login");
 		else {
-			System.out.println(request.getParameter("submit"));
+			request.setAttribute("action", "add");
+			request.setAttribute("title", "Add Event");
+			request.setAttribute("homeTab", "active");
 			if (request.getParameter("submit") != null) {
 				final String name = request.getParameter("name");
 				final String description = request.getParameter("description");
@@ -75,12 +79,18 @@ public class EventServlet extends HttpServlet {
 
 				Double latitude = null;
 				Double longitude = null;
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+				if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
+					latitude = Double.parseDouble(latitudeRequest);
+					longitude = Double.parseDouble(latitudeRequest);
+				}
+
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				Date currentDate = new Date();
 				Date startDate = null;
 				Date finishDate = null;
-				InputStream photo = null; // input stream of the upload file
 
-				Date currentDate = new Date();
+				InputStream photo = null; // input stream of the upload file
+				photo = photoRequest.getInputStream();
 
 				Event event = new Event();
 				Events eventsDB = new Events();
@@ -88,37 +98,41 @@ public class EventServlet extends HttpServlet {
 				if (name.isEmpty() || place.isEmpty() || startDateRequest.isEmpty()) {
 					request.setAttribute("errorMessage", "Set required fields");
 				} else {
-					if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
-						latitude = Double.parseDouble(latitudeRequest);
-						longitude = Double.parseDouble(latitudeRequest);
-					}
+
 					try {
 						startDate = simpleDateFormat.parse(startDateRequest);
 						if (startDate.before(currentDate)) {
 							request.setAttribute("errorMessage", "Wrong start date");
+							request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+									response);
 						}
 					} catch (Exception e) {
 						request.setAttribute("errorMessage", "Wrong date format");
+						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 					}
+
 					if (finishDateRequest.length() > 0) {
 						try {
 							finishDate = simpleDateFormat.parse(finishDateRequest);
 							if (finishDate.before(startDate)) {
 								request.setAttribute("errorMessage", "Wrong finish date");
+								request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+										response);
 							}
 						} catch (Exception e) {
 							request.setAttribute("errorMessage", "Wrong date format");
+							request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+									response);
 						}
 					}
+
 					if (photoRequest.getSize() > 0) {
-						System.out.println(photoRequest.getSubmittedFileName());
-						System.out.println(photoRequest.getSize());
-						System.out.println(photoRequest.getContentType());
 						if (photoRequest.getContentType() != "image/jpeg"
 								|| photoRequest.getContentType() != "image/png") {
 							request.setAttribute("errorMessage", "Wrong file format");
+							request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+									response);
 						}
-						photo = photoRequest.getInputStream();
 					}
 
 					event.setName(name);
@@ -135,9 +149,6 @@ public class EventServlet extends HttpServlet {
 					request.setAttribute("success", "Event succesfully created");
 				}
 			}
-			request.setAttribute("action", "add");
-			request.setAttribute("title", "Add Event");
-			request.setAttribute("homeTab", "active");
 			request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 		}
 	}
