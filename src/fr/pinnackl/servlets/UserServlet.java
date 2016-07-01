@@ -3,7 +3,6 @@ package fr.pinnackl.servlets;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +17,6 @@ import fr.pinnackl.beans.User;
  */
 @WebServlet(name = "user-servlet", description = "Servlet handling users for pinnackl project", urlPatterns = {
 		"/login", "/create", "/list", "/home", "/logout", "/change" })
-@MultipartConfig(maxFileSize = 1024 * 1024 * 16) // upload file's size up to
-													// 16MB
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String USER_SESSION = "userSession";
