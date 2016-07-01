@@ -20,3 +20,20 @@ td,
 th {
 	color: #222222;
 }
+
+.calendar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.calendar-control {
+  display: inline-block;
+}
+
+.calendar-control.left-button {
+  text-align: left;
+}
+.calendar-control.right-button {
+  text-align: right;
+}

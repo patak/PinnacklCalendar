@@ -12,6 +12,18 @@ $(document).ready(function () {
     $('#nextButton').click(function(){
     	$('#calendar').fullCalendar('next');
     });
+    $('#todayButton').click(function(){
+    	$('#calendar').fullCalendar('today');
+    });
+    $('#monthButton').click(function(){
+    	$('#calendar').fullCalendar( 'changeView', 'month' );
+    });
+    $('#weekButton').click(function(){
+    	$('#calendar').fullCalendar( 'changeView', 'basicWeek' );
+    });
+    $('#dayButton').click(function(){
+    	$('#calendar').fullCalendar( 'changeView', 'basicDay' );
+    });
 
     /**
      * Add Google Map
