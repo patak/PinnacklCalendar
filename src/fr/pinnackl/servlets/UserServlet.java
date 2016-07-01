@@ -105,7 +105,7 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("action", "login");
 		request.setAttribute("title", "Login");
 		request.setAttribute("loginTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -131,7 +131,7 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("action", "create");
 		request.setAttribute("title", "Create User");
 		request.setAttribute("createTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void list(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -140,7 +140,7 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("title", "List of All Users");
 		request.setAttribute("userList", usersDB.getAllUsers());
 		request.setAttribute("listTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userList.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userList.jsp").forward(request, response);
 	}
 
 	private void change(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -175,7 +175,7 @@ public class UserServlet extends HttpServlet {
 		request.setAttribute("action", "change");
 		request.setAttribute("title", "Change password");
 		request.setAttribute("changeTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

@@ -59,88 +59,100 @@ public class EventServlet extends HttpServlet {
 	}
 
 	private void add(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-		if (request.getParameter("submit") != null) {
-			final String name = request.getParameter("name");
-			final String description = request.getParameter("description");
-			final String place = request.getParameter("place");
-			final String latitudeRequest = request.getParameter("latitude");
-			final String longitudeRequest = request.getParameter("longitude");
-			final String startDateRequest = request.getParameter("startDate");
-			final String finishDateRequest = request.getParameter("finishDate");
-			final Part photoRequest = request.getPart("photo");
-
-			Double latitude = null;
-			Double longitude = null;
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-			Date startDate = null;
-			Date finishDate = null;
-			InputStream photo = null; // input stream of the upload file
-
-			Date currentDate = new Date();
-
-			Event event = new Event();
-			Events eventsDB = new Events();
-
-			if (name != null && place != null && startDateRequest != null) {
-				if (name.isEmpty() || place.isEmpty() || startDateRequest.isEmpty()) {
-					request.setAttribute("errorMessage", "Set required fields");
-				} else {
-					if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
-						latitude = Double.parseDouble(latitudeRequest);
-						longitude = Double.parseDouble(latitudeRequest);
-					}
-					try {
-						startDate = simpleDateFormat.parse(startDateRequest);
-						if (startDate.before(currentDate)) {
-							request.setAttribute("errorMessage", "Wrong start date");
-						}
-					} catch (Exception e) {
-						request.setAttribute("errorMessage", "Wrong date format");
-					}
-					if (finishDateRequest.length() > 0) {
-						try {
-							finishDate = simpleDateFormat.parse(finishDateRequest);
-							if (finishDate.before(startDate)) {
-								request.setAttribute("errorMessage", "Wrong finish date");
-							}
-						} catch (Exception e) {
-							request.setAttribute("errorMessage", "Wrong date format");
-						}
-					}
-					if (photoRequest.getSize() > 0) {
-						System.out.println(photoRequest.getSubmittedFileName());
-						System.out.println(photoRequest.getSize());
-						System.out.println(photoRequest.getContentType());
-						if (photoRequest.getContentType() != "image/jpeg"
-								|| photoRequest.getContentType() != "image/png") {
-							request.setAttribute("errorMessage", "Wrong file format");
-						}
-						photo = photoRequest.getInputStream();
-					}
-
-					event.setName(name);
-					event.setDescription(description);
-					event.setPlace(place);
-					event.setLatitude(latitude);
-					event.setLongitude(longitude);
-					event.setStartDate(startDate);
-					event.setFinishDate(finishDate);
-					event.setPhoto(photo);
-					event.setOrganizer((User) request.getSession().getAttribute(USER_SESSION));
-
-					eventsDB.createEvent(event);
-					request.setAttribute("success", "Event succesfully created");
-				}
-			}
-		} else
-			request.setAttribute("errorMessage", "Set required fields");
-
 		request.setAttribute("action", "add");
 		request.setAttribute("title", "Add Event");
 		request.setAttribute("createTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/eventForm.jsp").forward(request, response);
+		if (request.getSession().getAttribute(USER_SESSION) == null)
+			response.sendRedirect("login");
+		else {
+			if (request.getParameter("submit") != null) {
+				final String name = request.getParameter("name");
+				final String description = request.getParameter("description");
+				final String place = request.getParameter("place");
+				final String latitudeRequest = request.getParameter("latitude");
+				final String longitudeRequest = request.getParameter("longitude");
+				final String startDateRequest = request.getParameter("startDate");
+				final String finishDateRequest = request.getParameter("finishDate");
+				final Part photoRequest = request.getPart("photo");
 
+				Double latitude = null;
+				Double longitude = null;
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+				Date startDate = null;
+				Date finishDate = null;
+				InputStream photo = null; // input stream of the upload file
+
+				Date currentDate = new Date();
+
+				Event event = new Event();
+				Events eventsDB = new Events();
+
+				if (name != null && place != null && startDateRequest != null) {
+					if (name.isEmpty() || place.isEmpty() || startDateRequest.isEmpty()) {
+						request.setAttribute("errorMessage", "Set required fields");
+					} else {
+						if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
+							latitude = Double.parseDouble(latitudeRequest);
+							longitude = Double.parseDouble(latitudeRequest);
+						}
+						try {
+							startDate = simpleDateFormat.parse(startDateRequest);
+							if (startDate.before(currentDate)) {
+								request.setAttribute("errorMessage", "Wrong start date");
+								request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+										response);
+							}
+						} catch (Exception e) {
+							request.setAttribute("errorMessage", "Wrong date format");
+							request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+									response);
+						}
+						if (finishDateRequest.length() > 0) {
+							try {
+								finishDate = simpleDateFormat.parse(finishDateRequest);
+								if (finishDate.before(startDate)) {
+									request.setAttribute("errorMessage", "Wrong finish date");
+									request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+											response);
+								}
+							} catch (Exception e) {
+								request.setAttribute("errorMessage", "Wrong date format");
+								request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+										response);
+							}
+						}
+						if (photoRequest.getSize() > 0) {
+							System.out.println(photoRequest.getSubmittedFileName());
+							System.out.println(photoRequest.getSize());
+							System.out.println(photoRequest.getContentType());
+							if (photoRequest.getContentType() != "image/jpeg"
+									|| photoRequest.getContentType() != "image/png") {
+								request.setAttribute("errorMessage", "Wrong file format");
+								request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+										response);
+							}
+							photo = photoRequest.getInputStream();
+						}
+
+						event.setName(name);
+						event.setDescription(description);
+						event.setPlace(place);
+						event.setLatitude(latitude);
+						event.setLongitude(longitude);
+						event.setStartDate(startDate);
+						event.setFinishDate(finishDate);
+						event.setPhoto(photo);
+						event.setOrganizer((User) request.getSession().getAttribute(USER_SESSION));
+
+						eventsDB.createEvent(event);
+						request.setAttribute("success", "Event succesfully created");
+					}
+				} else {
+					request.setAttribute("errorMessage", "Set required fields");
+				}
+			}
+		}
+		request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 	}
 
 	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -149,7 +161,7 @@ public class EventServlet extends HttpServlet {
 		// request.setAttribute("title", "Event");
 		// request.setAttribute("userList", eventsDB.getEvents());
 		// request.setAttribute("listTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/eventCalendar.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
 	}
 
 }
