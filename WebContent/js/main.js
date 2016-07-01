@@ -3,7 +3,10 @@ $(document).ready(function () {
 	 * Full calendar
 	 */
     $('#calendar').fullCalendar({
-        // put your options and callbacks here
+    	header: {
+    		left: 'title',
+    		right: ''
+        }
     });
     
     $('#prevButton').click(function(){

@@ -1,3 +1,7 @@
+html, body, .pinnackl, .container {
+  height: 100%
+}
+
 body {
   padding-top: 50px;
   background: url(../img/pexels-photo-26135.jpg) no-repeat center fixed; 
@@ -36,4 +40,11 @@ th {
 }
 .calendar-control.right-button {
   text-align: right;
+
+
+}
+
+.fc-view-container {
+  background: #ffffff;
+  box-shadow: 0 0 20px 0 #000000;
 }
