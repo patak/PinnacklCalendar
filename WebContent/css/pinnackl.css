@@ -12,6 +12,6 @@ body {
   padding: 40px 15px;
 }
 
-#datetimepickerStart, #datetimepickerFinish {
+#datetimepickerStart, #datetimepickerFinish, #calendar {
 	color:black;
 }
