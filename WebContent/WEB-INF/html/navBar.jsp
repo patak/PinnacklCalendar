@@ -25,6 +25,7 @@
         <% } else { %>
         	<li class="${createTab}"><a href="create">Create User</a></li>
         <% } %>
+          <li class="${homeTab}"><a href="events">Events</a></li>
        </ul>
      </div><!--/.nav-collapse -->
    </div>
