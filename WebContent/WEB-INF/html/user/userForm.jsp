@@ -2,7 +2,7 @@
 <jsp:directive.page import="fr.pinnackl.beans.User" />
 <jsp:directive.page import="java.util.List" />
 
-<jsp:directive.include file="header.jsp"/>
+<jsp:directive.include file="../header.jsp"/>
 
 	<h1>${title}</h1>
 	
@@ -52,4 +52,4 @@
 		</form>
 	<% } %>
 
-<jsp:directive.include file="footer.jsp"/>
+<jsp:directive.include file="../footer.jsp"/>

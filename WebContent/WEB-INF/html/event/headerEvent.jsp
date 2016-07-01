@@ -15,6 +15,6 @@
   </head>
   
   <body>
-  	<jsp:directive.include file="navBar.jsp"/>
+  	<jsp:directive.include file="../navBar.jsp"/>
   	<div class="container">
   		<div class="pinnackl">
