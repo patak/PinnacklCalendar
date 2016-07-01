@@ -11,6 +11,9 @@
 	
 	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6uNEPCTx8tDMyc6PJX420mGfV4zBC0I4"></script>
 
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datetimepicker.min.js"></script>
+
 	<script src="js/main.js"></script>
 </body>
 </html>
