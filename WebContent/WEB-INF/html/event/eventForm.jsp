@@ -91,7 +91,7 @@
 
 		  <div class="form-group">
 		    <div class="col-md-10">
-		      <button type="submit" class="btn btn-primary btn-lg pull-right" name="submit">${action}</button>
+		      <input type="submit" class="btn btn-primary btn-lg pull-right" value="${action}" name="submit">
 		    </div>
 		  </div>
 		</form>
