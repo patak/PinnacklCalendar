@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 
-<jsp:directive.include file="header.jsp"/>
+<jsp:directive.include file="../header.jsp"/>
 
 	<table class="table table-striped">
 		<thead>
@@ -20,4 +20,4 @@
 		</tbody>
 	</table>
 	
-<jsp:directive.include file="footer.jsp"/>
+<jsp:directive.include file="../footer.jsp"/>

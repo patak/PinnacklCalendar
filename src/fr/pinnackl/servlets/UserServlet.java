@@ -1,9 +1,6 @@
 package fr.pinnackl.servlets;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -11,28 +8,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 import fr.pinnackl.bcrypt.BCrypt;
-import fr.pinnackl.bdd.Events;
 import fr.pinnackl.bdd.Users;
-import fr.pinnackl.beans.Event;
 import fr.pinnackl.beans.User;
 
 /**
- * Servlet implementation class PinnacklServlet
+ * Servlet implementation class UserServlet
  */
-@WebServlet(name = "pinnackl-servlet", description = "Servlet handling pinnackl project", urlPatterns = { "/login",
-		"/create", "/list", "/home", "/logout", "/change", "/add", "/events" })
-@MultipartConfig(maxFileSize = 16177215) // upload file's size up to 16MB
-public class PinnacklServlet extends HttpServlet {
+@WebServlet(name = "user-servlet", description = "Servlet handling users for pinnackl project", urlPatterns = {
+		"/login", "/create", "/list", "/home", "/logout", "/change" })
+@MultipartConfig(maxFileSize = 1024 * 1024 * 16) // upload file's size up to
+													// 16MB
+public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String USER_SESSION = "userSession";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public PinnacklServlet() {
+	public UserServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -56,10 +51,6 @@ public class PinnacklServlet extends HttpServlet {
 			this.logout(request, response);
 		} else if (uri.contains("/change")) {
 			this.change(request, response);
-		} else if (uri.contains("/add")) {
-			this.add(request, response);
-		} else if (uri.contains("/events")) {
-			this.events(request, response);
 		} else {
 			this.home(request, response);
 		}
@@ -114,7 +105,7 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("action", "login");
 		request.setAttribute("title", "Login");
 		request.setAttribute("loginTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -140,7 +131,7 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("action", "create");
 		request.setAttribute("title", "Create User");
 		request.setAttribute("createTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void list(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -149,7 +140,7 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("title", "List of All Users");
 		request.setAttribute("userList", usersDB.getAllUsers());
 		request.setAttribute("listTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userList.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userList.jsp").forward(request, response);
 	}
 
 	private void change(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -184,103 +175,13 @@ public class PinnacklServlet extends HttpServlet {
 		request.setAttribute("action", "change");
 		request.setAttribute("title", "Change password");
 		request.setAttribute("changeTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/userForm.jsp").forward(request, response);
+		request.getRequestDispatcher("/WEB-INF/html/user/userForm.jsp").forward(request, response);
 	}
 
 	private void logout(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		if (request.getSession().getAttribute(USER_SESSION) != null)
 			request.getSession().removeAttribute(USER_SESSION);
 		response.sendRedirect("login");
-	}
-
-	private void add(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (request.getParameter("submit") != null) {
-			final String name = request.getParameter("name");
-			final String description = request.getParameter("description");
-			final String place = request.getParameter("place");
-			final String latitudeRequest = request.getParameter("latitude");
-			final String longitudeRequest = request.getParameter("longitude");
-			final String startDateRequest = request.getParameter("startDate");
-			final String finishDateRequest = request.getParameter("finishDate");
-			final Part photoRequest = request.getPart("photo");
-
-			Double latitude = null;
-			Double longitude = null;
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-			Date startDate = null;
-			Date finishDate = null;
-			InputStream photo = null; // input stream of the upload file
-
-			Date currentDate = new Date();
-
-			Event event = new Event();
-			Events eventsDB = new Events();
-
-			if (name != null && place != null && startDateRequest != null) {
-				if (name.isEmpty() || place.isEmpty() || startDateRequest.isEmpty()) {
-					request.setAttribute("errorMessage", "Set required fields");
-				} else {
-					if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
-						latitude = Double.parseDouble(latitudeRequest);
-						longitude = Double.parseDouble(latitudeRequest);
-					}
-					try {
-						startDate = simpleDateFormat.parse(startDateRequest);
-						if (startDate.before(currentDate)) {
-							request.setAttribute("errorMessage", "Wrong start date");
-						}
-					} catch (Exception e) {
-						request.setAttribute("errorMessage", "Wrong date format");
-					}
-					if (finishDateRequest.length() > 0) {
-						try {
-							finishDate = simpleDateFormat.parse(finishDateRequest);
-							if (finishDate.before(startDate)) {
-								request.setAttribute("errorMessage", "Wrong finish date");
-							}
-						} catch (Exception e) {
-							request.setAttribute("errorMessage", "Wrong date format");
-						}
-					}
-					if (photoRequest.getSize() > 0) {
-						System.out.println(photoRequest.getSubmittedFileName());
-						System.out.println(photoRequest.getSize());
-						System.out.println(photoRequest.getContentType());
-						if (photoRequest.getContentType() != "image/jpeg"
-								|| photoRequest.getContentType() != "image/png") {
-							request.setAttribute("errorMessage", "Wrong file format");
-						}
-						photo = photoRequest.getInputStream();
-					}
-
-					event.setName(name);
-					event.setDescription(description);
-					event.setPlace(place);
-					event.setLatitude(latitude);
-					event.setLongitude(longitude);
-					event.setStartDate(startDate);
-					event.setFinishDate(finishDate);
-					event.setPhoto(photo);
-					event.setOrganizer((User) request.getSession().getAttribute(USER_SESSION));
-
-					eventsDB.createEvent(event);
-					request.setAttribute("success", "Event succesfully created");
-				}
-			}
-		}
-		request.setAttribute("action", "add");
-		request.setAttribute("title", "Add Event");
-		request.setAttribute("createTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/eventForm.jsp").forward(request, response);
-	}
-
-	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Events eventsDB = new Events();
-
-		// request.setAttribute("title", "Event");
-		// request.setAttribute("userList", eventsDB.getEvents());
-		// request.setAttribute("listTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/eventCalendar.jsp").forward(request, response);
 	}
 
 }
