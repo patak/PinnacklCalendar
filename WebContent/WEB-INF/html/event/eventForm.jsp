@@ -2,7 +2,7 @@
 <jsp:directive.page import="fr.pinnackl.beans.Event" />
 <jsp:directive.page import="java.util.List" />
 
-<jsp:directive.include file="headerEvent.jsp"/>
+<jsp:directive.include file="../header.jsp"/>
 
 	<h1>${title}</h1>
 	<%if (request.getAttribute("success") != null){%>
@@ -96,72 +96,5 @@
 		  </div>
 		</form>
 	<% } %>
-	
-
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6uNEPCTx8tDMyc6PJX420mGfV4zBC0I4">
-</script>
-
-
-<script type="text/javascript">
-var geocoder;
-var map;
-var marker;
-
-// initialisation de la carte Google Map de départ
-function initMap() {
-  geocoder = new google.maps.Geocoder();
-  // Ici j'ai mis la latitude et longitude du vieux Port de Marseille pour centrer la carte de départ
-  var latlng = new google.maps.LatLng(48.856614, 2.3522219000000177);
-  var mapOptions = {
-    zoom      : 14,
-    center    : latlng,
-    mapTypeId : google.maps.MapTypeId.ROADMAP
-  }
-  // map-canvas est le conteneur HTML de la carte Google Map
-  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-}
- 
-function findPlace() {
-  // Réinitialisation du marqueur		
-  if(marker !=null)
-	  marker.setMap(null);
-  // Récupération de l'adresse tapée dans le formulaire
-  var adresse = document.getElementById('maps').value;
-  geocoder.geocode( { 'address': adresse}, function(results, status) {
-    if (status == google.maps.GeocoderStatus.OK) {
-      map.setCenter(results[0].geometry.location);
-      // Récupération des coordonnées GPS du lieu tapé dans le formulaire
-      var strposition = results[0].geometry.location+"";
-      strposition=strposition.replace('(', '');
-      strposition=strposition.replace(')', '');
-      // Affichage des coordonnées dans le <span>
-      document.getElementById('text_latlng').innerHTML='Coordonnées : '+strposition;
-      //Récupération des coordonnées dans le formulaire
-      document.getElementById('latitude').value=results[0].geometry.location.lat();
-      document.getElementById('longitude').value=results[0].geometry.location.lng();
-      // Création du marqueur du lieu (épingle)
-      marker = new google.maps.Marker({
-          map: map,
-          position: results[0].geometry.location
-      });
-    } else {
-      alert('Adresse introuvable: ' + status);
-    }
-  });
-}
-// Lancement de la construction de la carte google map
-google.maps.event.addDomListener(window, 'load', initMap);
-</script>
-
-<script type="text/javascript">
-    $(function () {
-        $('#datetimepickerStart').datetimepicker({
-            locale: 'fr'
-        });
-        $('#datetimepickerFinish').datetimepicker({
-            locale: 'fr'
-        });
-    });
-</script>
 
 <jsp:directive.include file="../footer.jsp"/>
