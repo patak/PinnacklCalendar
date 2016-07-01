@@ -15,3 +15,8 @@ body {
 #datetimepickerStart, #datetimepickerFinish, #calendar {
 	color:black;
 }
+
+td,
+th {
+	color: #222222;
+}
