@@ -4,10 +4,43 @@ $(document).ready(function () {
 	 */
     $('#calendar').fullCalendar({
     	header: {
-    		left: 'title',
+    		left: '',
     		right: ''
-        }
+        },
+		dayClick: function(date, jsEvent, view) {
+
+		    // console.info('---');
+			// console.log('Clicked on: ' + date.format());
+		    // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+		    // console.log('Current view: ' + view.name);
+
+		    $('.add-button').remove();
+		    $('.fc-today').removeClass('fc-today');
+		    $('.fc-state-highlight').removeClass('fc-state-highlight');
+
+		    // change the day's background color just for fun
+		    $(this).addClass('fc-state-highlight fc-today');
+		    $(this).append('<button class="add-button btn btn-default">+</button>');
+
+		}
     });
+
+    $('#calendar').fullCalendar('addEventSource', [
+        {
+            title  : 'event1',
+            start  : '2016-07-01'
+        },
+        {
+            title  : 'event2',
+            start  : '2016-07-01',
+            end    : '2016-07-01'
+        },
+        {
+            title  : 'event3',
+            start  : '2016-07-01T12:30:00',
+            allDay : false // will make the time show
+        }
+    ]);
     
     $('#prevButton').click(function(){
     	$('#calendar').fullCalendar('prev');
