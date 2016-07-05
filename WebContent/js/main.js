@@ -22,8 +22,15 @@ $(document).ready(function () {
 		    $(this).addClass('fc-state-highlight fc-today');
 		    $(this).append('<button class="add-button btn btn-default">+</button>');
 
-		}
+		},
+		handleWindowResize: true,
+		windowResize: function(view) {
+        	
+    	}
     });
+
+    var moment = $('#calendar').fullCalendar('getDate');
+    $('.dataToday').html(moment.format('MMMM YYYY'));
 
     $('#calendar').fullCalendar('addEventSource', [
         {

@@ -14,6 +14,7 @@
 				<span class="glyphicon glyphicon-chevron-right"></span>
 			</button>
 			<button id="todayButton" class="btn btn-default">Today</button>
+			<span class="dataToday"></span>
 		</div>
 		<div class="calendar-control right-button">
 			<button id="monthButton" class="btn btn-default">Month</button>
