@@ -96,6 +96,19 @@ td.fc-day-number.fc-wed.fc-today.fc-state-highlight:before {
     margin-left: -10px;
 }
 
+/* Add spance between number and event labels */
+.fc-content-skeleton tbody:before {
+    content: "_";
+    display: block;
+    line-height: 1px;
+    color: transparent;
+}
+
+/* Add color to the today column */
+th.fc-day-header.fc-widget-header.fc-wed.current-day-column {
+    color: #3a87ad;
+}
+
 /* Inherits background for each event from Schedule. */
 .fc-event .fc-bg {
   z-index: 1 !important;
