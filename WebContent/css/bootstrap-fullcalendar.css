@@ -76,14 +76,14 @@ Colors: Use the following - https://www.google.com/design/spec/style/color.html#
     padding: 1em 0 0 1em!important;
 }
 
-td.fc-day-number.fc-wed.fc-today.fc-state-highlight {
+td.fc-day-number.fc-today.fc-state-highlight {
     opacity: 1;
     font-weight: bolder;
     color: #fff;
 }
 
 /* Display today numbber in a more cool way */
-td.fc-day-number.fc-wed.fc-today.fc-state-highlight:before {
+td.fc-day-number.fc-today.fc-state-highlight:before {
     content: "";
     display: inline-block;
     background: #3b91ad;
