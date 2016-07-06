@@ -104,6 +104,13 @@ td.fc-day-number.fc-wed.fc-today.fc-state-highlight:before {
     color: transparent;
 }
 
+.fc * {
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */
+}
+
 /* Add color to the today column */
 th.fc-day-header.fc-widget-header.fc-wed.current-day-column {
     color: #3a87ad;
