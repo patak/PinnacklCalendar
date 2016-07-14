@@ -43,6 +43,11 @@ public class EventServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		final String uri = request.getRequestURI();
+		System.out.println(request.getRequestURI());
+		System.out.println(request.getContextPath());
+		System.out.println(request.getServletPath());
+		System.out.println(request.getQueryString());
+		System.out.println(request.getParameter("id"));
 		if (uri.contains("/add")) {
 			this.add(request, response);
 		} else if (uri.contains("/events")) {
