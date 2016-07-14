@@ -54,3 +54,9 @@ th {
 .add-button:hover {
   cursor: pointer;
 }
+
+.required em {
+    color: #F30B06;
+    float: right;
+    margin-left: 6px;
+}
