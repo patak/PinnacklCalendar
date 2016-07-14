@@ -2,114 +2,117 @@ $(document).ready(function () {
 	/**
 	 * Full calendar
 	 */
-    $('#calendar').fullCalendar({
-    	header: {
-    		left: '',
-    		right: ''
-        },
-		dayClick: function(date, jsEvent, view) {
+  $('#calendar').fullCalendar({
+  	header: {
+  		left: '',
+  		right: ''
+      },
+	dayClick: function(date, jsEvent, view) {
 
-		    // console.info('---');
-			// console.log('Clicked on: ' + date.format());
-		    // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-		    // console.log('Current view: ' + view.name);
+	    // console.info('---');
+		// console.log('Clicked on: ' + date.format());
+	    // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+	    // console.log('Current view: ' + view.name);
 
-		    // FIXME: remove handler until we know how to manage event creation
-		    // $('.add-button').remove();
-		    // $('.fc-today').removeClass('fc-today');
-		    // $('.fc-state-highlight').removeClass('fc-state-highlight');
+	    // FIXME: remove handler until we know how to manage event creation
+	    // $('.add-button').remove();
+	    // $('.fc-today').removeClass('fc-today');
+	    // $('.fc-state-highlight').removeClass('fc-state-highlight');
 
-		    // // change the day's background color just for fun
-		    // $(this).addClass('fc-state-highlight fc-today');
-		    // $(this).append('<button class="add-button btn btn-default">+</button>');
+	    // // change the day's background color just for fun
+	    // $(this).addClass('fc-state-highlight fc-today');
+	    // $(this).append('<button class="add-button btn btn-default">+</button>');
 
-		},
-		handleWindowResize: true,
-		windowResize: function(view) {
-        	
-    	}
-    });
+	},
+	handleWindowResize: true,
+	windowResize: function(view) {
+      	
+  	}
+  });
 
-    var moment = $('#calendar').fullCalendar('getDate');
+  currDayCol = "";
+  var moment = $('#calendar').fullCalendar('getDate');
+  if (moment.format) {
     var currDayCol = moment.format('ddd');
-
     $('.dataToday').html(moment.format('MMMM YYYY'));
-    
-    // FIXME: trigger on calendar render
-    $('th.fc-day-header.fc-widget-header.fc-' + currDayCol.toLowerCase()).addClass('current-day-column');
+  }
 
-    $('#calendar').fullCalendar('addEventSource', [
-        {
-            title  : 'event1',
-            start  : '2016-07-01'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-01'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event1',
-            start  : '2016-07-06'
-        },
-        {
-            title  : 'event2',
-            start  : '2016-07-01',
-            end    : '2016-07-01'
-        },
-        {
-            title  : 'event3',
-            start  : '2016-07-01T12:30:00',
-            allDay : false // will make the time show
-        }
-    ]);
-    
-    $('#prevButton').click(function(){
-    	$('#calendar').fullCalendar('prev');
-    });
-    $('#nextButton').click(function(){
-    	$('#calendar').fullCalendar('next');
-    });
-    $('#todayButton').click(function(){
-    	$('#calendar').fullCalendar('today');
-    });
-    $('#monthButton').click(function(){
-    	$('#calendar').fullCalendar( 'changeView', 'month' );
-    });
-    $('#weekButton').click(function(){
-    	$('#calendar').fullCalendar( 'changeView', 'basicWeek' );
-    });
-    $('#dayButton').click(function(){
-    	$('#calendar').fullCalendar( 'changeView', 'basicDay' );
-    });
+  
+  // FIXME: trigger on calendar render
+  $('th.fc-day-header.fc-widget-header.fc-' + currDayCol.toLowerCase()).addClass('current-day-column');
 
-    /**
-     * Add Google Map
-     */
-    var geocoder;
+  $('#calendar').fullCalendar('addEventSource', [
+      {
+          title  : 'event1',
+          start  : '2016-07-01'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-01'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event1',
+          start  : '2016-07-06'
+      },
+      {
+          title  : 'event2',
+          start  : '2016-07-01',
+          end    : '2016-07-01'
+      },
+      {
+          title  : 'event3',
+          start  : '2016-07-01T12:30:00',
+          allDay : false // will make the time show
+      }
+  ]);
+  
+  $('#prevButton').click(function(){
+  	$('#calendar').fullCalendar('prev');
+  });
+  $('#nextButton').click(function(){
+  	$('#calendar').fullCalendar('next');
+  });
+  $('#todayButton').click(function(){
+  	$('#calendar').fullCalendar('today');
+  });
+  $('#monthButton').click(function(){
+  	$('#calendar').fullCalendar( 'changeView', 'month' );
+  });
+  $('#weekButton').click(function(){
+  	$('#calendar').fullCalendar( 'changeView', 'basicWeek' );
+  });
+  $('#dayButton').click(function(){
+  	$('#calendar').fullCalendar( 'changeView', 'basicDay' );
+  });
+
+  /**
+   * Add Google Map
+   */
+  var geocoder;
 	var map;
 	var marker;
 
