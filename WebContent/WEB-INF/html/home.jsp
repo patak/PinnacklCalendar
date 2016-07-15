@@ -8,6 +8,6 @@
 	<div class="alert alert-success" role="alert">
 		<h1>Hello ${login}</h1>
 	</div>
-	<a class="btn btn-primary" href="add">Create an envent</a>
+	<a class="btn btn-primary" href="add">Create an event</a>
 
 <jsp:directive.include file="footer.jsp"/>

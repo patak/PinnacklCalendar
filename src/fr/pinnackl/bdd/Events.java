@@ -95,14 +95,30 @@ public class Events {
 			while (result.next()) {
 				Integer id = result.getInt("event_id");
 				String name = result.getString("name");
+				String description = result.getString("description");
 				String place = result.getString("place");
 				Double latitudeRequest = result.getDouble("latitude");
 				Double longitudeRequest = result.getDouble("longitude");
 				Date startDate = result.getDate("startDate");
 				Date finishDate = result.getDate("finishDate");
 				Blob photo = result.getBlob("photo");
-
+				Integer organizer_id = result.getInt("organizer_id");
+				
 				Event event = new Event();
+				event.setId(id);
+				event.setName(name);
+				event.setDescription(description);
+				event.setPlace(place);
+				event.setLatitude(latitudeRequest);
+				event.setLongitude(longitudeRequest);
+				event.setStartDate(startDate);
+				if (finishDate != null)
+					event.setFinishDate(finishDate);
+				else
+					event.setFinishDate(startDate);
+				if (photo != null)
+					event.setPhoto(photo.getBinaryStream());
+				
 				events.add(event);
 
 			}
