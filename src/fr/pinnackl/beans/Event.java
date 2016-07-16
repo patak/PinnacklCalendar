@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Date;
 
 public class Event {
-	private Integer id;
+	private Integer ID;
 	private String name;
 	private String description;
 	private String place;
@@ -15,14 +15,14 @@ public class Event {
 	private User organizer;
 	private InputStream photo;
 
-	public Integer getId() {
-		return id;
+	public Integer getID() {
+		return ID;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setID(Integer iD) {
+		ID = iD;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
