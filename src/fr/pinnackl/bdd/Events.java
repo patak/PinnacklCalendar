@@ -137,4 +137,13 @@ public class Events {
 		}
 		return events;
 	}
+
+	public Event getEventByID(Integer eventID) {
+		for (Event e : getEvents()) {
+			if (e.getID().equals(eventID)) {
+				return e;
+			}
+		}
+		return null;
+	}
 }

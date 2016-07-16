@@ -24,18 +24,4 @@
 	</div>
 	<div id="calendar">
 	</div>
-	
-	<script>
-	$(document).ready(function () {
-		<c:forEach var="event" items="${eventsList}">
-			$('#calendar').fullCalendar( 'addEventSource', [
-				{
-					title: '<c:out value="${event.name}" />',
-					start: '<c:out value="${event.startDate}" />',
-					end: '<c:out value="${event.finishDate}" />'
-				}
-			] );
-		</c:forEach>
-	});
-	</script>
 <jsp:directive.include file="../footer.jsp"/>
