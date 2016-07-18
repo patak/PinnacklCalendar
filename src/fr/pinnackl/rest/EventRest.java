@@ -1,35 +1,67 @@
 package fr.pinnackl.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import fr.pinnackl.bdd.Events;
 import fr.pinnackl.beans.Event;
 
+@Path("/events")
 public class EventRest {
+	@GET
+	@Produces("application/json")
+	public Response getEvents() throws JSONException {
 
-	public String getEvents() {
+		List<JSONObject> jsonObjects = new ArrayList<JSONObject>();
 
 		Events eventsDB = new Events();
-		List<Event> eventList = eventsDB.getEvents();
+		List<Event> events = eventsDB.getEvents();
 
-		Gson gson = new Gson();
+		for (Event event : events) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id", event.getID());
+			jsonObject.put("name", event.getName());
+			jsonObject.put("startDate", event.getStartDate());
+			jsonObject.put("finishDate", event.getFinishDate());
 
-		String json = gson.toJson(eventList);
+			jsonObjects.add(jsonObject);
+		}
 
-		return json;
+		return Response.status(200).type(MediaType.APPLICATION_JSON + "; charset=UTF-8").entity(jsonObjects.toString())
+				.build();
 	}
 
-	public String getEvent(Integer id) {
+	@Path("{id}")
+	@GET
+	@Produces("application/json")
+	public Response getEvent(@PathParam("id") Integer id) throws JSONException {
+
+		JSONObject jsonObject = new JSONObject();
 
 		Events eventsDB = new Events();
+
 		Event event = eventsDB.getEventByID(id);
 
-		Gson gson = new Gson();
+		if (event != null) {
+			jsonObject.put("id", event.getID());
+			jsonObject.put("name", event.getName());
+			jsonObject.put("startDate", event.getStartDate());
+			jsonObject.put("finishDate", event.getFinishDate());
 
-		String json = gson.toJson(event);
+			return Response.status(200).type(MediaType.APPLICATION_JSON + "; charset=UTF-8")
+					.entity(jsonObject.toString()).build();
+		}
 
-		return json;
+		return Response.status(404).build();
 	}
 }

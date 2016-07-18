@@ -16,13 +16,12 @@ import javax.servlet.http.Part;
 import fr.pinnackl.bdd.Events;
 import fr.pinnackl.beans.Event;
 import fr.pinnackl.beans.User;
-import fr.pinnackl.rest.EventRest;
 
 /**
  * Servlet implementation class EventServlet
  */
 @WebServlet(name = "event-servlet", description = "Servlet handling events for pinnackl project", urlPatterns = {
-		"/add", "/events", "/json/getallevents", "/json/getevent" })
+		"/add", "/events" })
 @MultipartConfig(maxFileSize = 1024 * 1024 * 16)
 public class EventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -53,10 +52,6 @@ public class EventServlet extends HttpServlet {
 			this.add(request, response);
 		} else if (uri.contains("/events")) {
 			this.events(request, response);
-		} else if (uri.contains("/json/getallevents")) {
-			this.restGetEvents(request, response);
-		} else if (uri.contains("/json/getevent")) {
-			this.restGetEvent(request, response);
 		}
 	}
 
@@ -173,32 +168,5 @@ public class EventServlet extends HttpServlet {
 		System.out.println(eventsDB.getEvents());
 		request.setAttribute("eventsTab", "active");
 		request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
-	}
-
-	private void restGetEvents(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-
-		EventRest event = new EventRest();
-
-		String json = event.getEvents();
-
-		response.setStatus(200);
-		response.getWriter().write(json);
-		response.getWriter().flush();
-		response.getWriter().close();
-	}
-
-	private void restGetEvent(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		int id = Integer.parseInt(request.getParameter("id"));
-
-		EventRest event = new EventRest();
-
-		String json = event.getEvent(id);
-
-		response.setStatus(200);
-		response.getWriter().write(json);
-		response.getWriter().flush();
-		response.getWriter().close();
 	}
 }
