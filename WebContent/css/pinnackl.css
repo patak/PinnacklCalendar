@@ -54,3 +54,53 @@ th {
 .add-button:hover {
   cursor: pointer;
 }
+
+.required em {
+    color: #F30B06;
+    float: right;
+    margin-left: 6px;
+}
+
+.eventForm {
+  background: rgba(255,255,255,.84);
+  box-shadow: 0 0 45px 0px #000;
+  padding: 2em;
+}
+
+.input-group .input-group-addon {
+  vertical-align: text-top;
+}
+
+/* Date picker theme */
+body .dtp > .dtp-content {
+  max-height: 100%;
+}
+
+body .dtp > .dtp-content > .dtp-date-view > header.dtp-header {
+    background: #3F51B5;
+}
+
+body .dtp div.dtp-date, body .dtp div.dtp-time {
+  background: #26316D;
+}
+
+body .dtp .p10 > a {
+    color: #FFFFFF;
+}
+
+body .dtp table.dtp-picker-days tr > td > a.selected {
+    color: #FFFFFF;
+}
+
+body .dtp table.dtp-picker-days tr > td > a.selected {
+    background: #26316D;
+}
+
+body .hour-hand, body .minute-hand {
+  stroke: #26316D;
+}
+
+body .dtp-select-minute[fill="#8BC34A"], body .dtp-select-hour[fill="#8BC34A"] {
+  fill: #26316D;
+}
+
