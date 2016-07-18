@@ -75,3 +75,9 @@ local.properties
 ######################
 
 /src/fr/pinnackl/bdd/Config.java
+
+######################
+# Web dependencies   #
+######################
+
+vendor

@@ -1,0 +1,23 @@
+{
+  "name": "PinnacklCalendar",
+  "homepage": "https://github.com/patak/PinnacklCalendar",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Pinnackl"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "WebContent/vendor"
+  ],
+  "dependencies": {
+    "bootstrap-material-datetimepicker": "^2.7.1",
+    "moment": "momentjs#^2.14.1",
+    "fullcalendar": "^2.9.0"
+  }
+}
