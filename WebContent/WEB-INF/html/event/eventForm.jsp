@@ -15,11 +15,11 @@
 			${errorMessage}
 		</div>
 		<% } %>
-		<form class="form-horizontal col-md-12" action="${action}" method="post" enctype="multipart/form-data">
+		<form class="form-horizontal col-md-12 eventForm" action="${action}" method="post" enctype="multipart/form-data">
 		  <div class="form-group">
-		    <label for="name" class="col-md-2 control-label">Name</label>
+		    <label for="name" class="col-md-2 control-label required"><em>*</em>Name</label>
 		    <div class="col-md-8">
-		      <input type="text" class="form-control" id="name" placeholder="Name" name="name">
+		      <input type="text" class="form-control" id="name" placeholder="Name" name="name" required>
 		    </div>
 		  </div>
 		  
@@ -31,9 +31,9 @@
 		  </div>
 		  
 		  <div class="form-group">
-		    <label for="place" class="col-md-2 control-label">Place</label>
+		    <label for="place" class="col-md-2 control-label required"><em>*</em>Place</label>
 		    <div class="col-md-8">
-		      <input type="text" class="form-control" id="place" placeholder="Place" name="place">
+		      <input type="text" class="form-control" id="place" placeholder="Place" name="place" required>
 		    </div>
 		  </div>
 		  
@@ -43,7 +43,7 @@
 		      <div class="input-group">	
 		      	<input type="text" class="form-control" id="maps" name="maps">
 		      	<span class="input-group-btn">
-		      		<button class="btn btn-default" type="button" onclick="findPlace();"/>Localize</button>
+		      		<button class="btn btn-default findPlaceBtn" type="button">Localize</button>
 		      	</span>
 		      </div>
 		    </div>
@@ -59,12 +59,12 @@
 		  </div>
 		  
 		  <div class="form-group">
-	  		<label for="startDate" class="col-md-2 control-label">Start Date</label>
+	  		<label for="startDate" class="col-md-2 control-label required"><em>*</em>Start Date</label>
 		    <div class="col-md-8">
               <div class='input-group date' id='datetimepickerStart'>
-                  <input type='text' class="form-control" id="startDate" name="startDate"/>
+                  <input type='text' class="form-control" id="startDate" name="startDate" required>
                   <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
+                      <button type="button" class="btn btn-default glyphicon glyphicon-calendar"></button>
                   </span>
               </div>
             </div>
@@ -76,7 +76,7 @@
               <div class='input-group date' id='datetimepickerFinish'>
                   <input type='text' class="form-control" id="finishDate" name="finishDate"/>
                   <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-calendar"></span>
+	                  <button type="button" class="btn btn-default glyphicon glyphicon-calendar"></button>
                   </span>
               </div>
             </div>
