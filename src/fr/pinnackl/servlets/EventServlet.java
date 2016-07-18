@@ -16,12 +16,13 @@ import javax.servlet.http.Part;
 import fr.pinnackl.bdd.Events;
 import fr.pinnackl.beans.Event;
 import fr.pinnackl.beans.User;
+import fr.pinnackl.rest.EventRest;
 
 /**
  * Servlet implementation class EventServlet
  */
 @WebServlet(name = "event-servlet", description = "Servlet handling events for pinnackl project", urlPatterns = {
-		"/add", "/events" })
+		"/add", "/events", "/json/getallevents", "/json/getevent" })
 @MultipartConfig(maxFileSize = 1024 * 1024 * 16)
 public class EventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -52,6 +53,10 @@ public class EventServlet extends HttpServlet {
 			this.add(request, response);
 		} else if (uri.contains("/events")) {
 			this.events(request, response);
+		} else if (uri.contains("/json/getallevents")) {
+			this.restGetEvents(request, response);
+		} else if (uri.contains("/json/getevent")) {
+			this.restGetEvent(request, response);
 		}
 	}
 
@@ -90,7 +95,7 @@ public class EventServlet extends HttpServlet {
 				}
 
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-				Date currentDate = new Date();
+				// Date currentDate = new Date();
 				Date startDate = null;
 				Date finishDate = null;
 
@@ -106,11 +111,12 @@ public class EventServlet extends HttpServlet {
 
 					try {
 						startDate = simpleDateFormat.parse(startDateRequest);
-						if (startDate.before(currentDate)) {
-							request.setAttribute("errorMessage", "Wrong start date");
-							request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
-									response);
-						}
+						// if (startDate.before(currentDate)) {
+						// request.setAttribute("errorMessage", "Wrong start
+						// date");
+						// request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+						// response);
+						// }
 					} catch (Exception e) {
 						request.setAttribute("errorMessage", "Wrong date format");
 						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
@@ -163,8 +169,36 @@ public class EventServlet extends HttpServlet {
 
 		request.setAttribute("title", "Event");
 		request.setAttribute("eventsList", eventsDB.getEvents());
+		System.out.println("Event list :");
+		System.out.println(eventsDB.getEvents());
 		request.setAttribute("eventsTab", "active");
 		request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
 	}
 
+	private void restGetEvents(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+
+		EventRest event = new EventRest();
+
+		String json = event.getEvents();
+
+		response.setStatus(200);
+		response.getWriter().write(json);
+		response.getWriter().flush();
+		response.getWriter().close();
+	}
+
+	private void restGetEvent(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		int id = Integer.parseInt(request.getParameter("id"));
+
+		EventRest event = new EventRest();
+
+		String json = event.getEvent(id);
+
+		response.setStatus(200);
+		response.getWriter().write(json);
+		response.getWriter().flush();
+		response.getWriter().close();
+	}
 }
