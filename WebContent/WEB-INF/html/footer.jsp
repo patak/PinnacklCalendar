@@ -13,7 +13,6 @@
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="vendor/bootstrap-material-design/dist/js/material.min.js"></script>
 	<script type="text/javascript" src="vendor/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-	<script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
 
 	<script src="js/main.js"></script>
 </body>
