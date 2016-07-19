@@ -95,6 +95,7 @@ public class Events {
 			while (result.next()) {
 				Integer id = result.getInt("event_id");
 				String name = result.getString("name");
+				String description = result.getString("description");
 				String place = result.getString("place");
 				Double latitudeRequest = result.getDouble("latitude");
 				Double longitudeRequest = result.getDouble("longitude");
@@ -105,6 +106,7 @@ public class Events {
 				Event event = new Event();
 				event.setID(id);
 				event.setName(name);
+				event.setDescription(description);
 				event.setPlace(place);
 				event.setLatitude(latitudeRequest);
 				event.setLongitude(longitudeRequest);
