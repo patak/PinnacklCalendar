@@ -24,4 +24,12 @@
 	</div>
 	<div id="calendar">
 	</div>
+	<div id="showEventModal" class="modal fade">
+	  <div class="modal-dialog" role="document">
+	  	<!--
+	  		The modal content goes here
+	  		The data comes from javascript
+	  	-->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 <jsp:directive.include file="../footer.jsp"/>
