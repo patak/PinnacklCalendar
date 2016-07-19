@@ -164,8 +164,6 @@ public class EventServlet extends HttpServlet {
 
 		request.setAttribute("title", "Event");
 		request.setAttribute("eventsList", eventsDB.getEvents());
-		System.out.println("Event list :");
-		System.out.println(eventsDB.getEvents());
 		request.setAttribute("eventsTab", "active");
 		request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
 	}
