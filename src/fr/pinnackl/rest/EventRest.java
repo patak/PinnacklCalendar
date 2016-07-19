@@ -31,12 +31,13 @@ public class EventRest {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", event.getID());
 			jsonObject.put("name", event.getName());
+			jsonObject.put("description", event.getDescription());
 			jsonObject.put("startDate", event.getStartDate());
 			jsonObject.put("finishDate", event.getFinishDate());
 
 			jsonObjects.add(jsonObject);
 		}
-
+		// System.out.println(jsonObjects.toString());
 		return Response.status(200).type(MediaType.APPLICATION_JSON + "; charset=UTF-8").entity(jsonObjects.toString())
 				.build();
 	}
@@ -44,7 +45,7 @@ public class EventRest {
 	@Path("{id}")
 	@GET
 	@Produces("application/json")
-	public Response getEvent(@PathParam("id") Integer id) throws JSONException {
+	public Response getEvent(@PathParam("id")	 Integer id) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 
