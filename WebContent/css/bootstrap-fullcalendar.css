@@ -60,11 +60,22 @@ Colors: Use the following - https://www.google.com/design/spec/style/color.html#
 }
 
 /* Remove the header border from Schedule */
-.fc td, .fc th {
+.fc .fc-month-view td, .fc th {
   border-style: none !important;
   border-width: 1px !important;
   padding: 0 !important;
   vertical-align: top !important;
+}
+
+.fc .fc-agendaWeek-view td {
+  /*border-top-style: none !important;*/
+  border-width: 1px !important;
+  padding: 0 !important;
+  vertical-align: top !important
+}
+
+.fc-time-grid .fc-slats .fc-minor td {
+  border-top-style: none;
 }
 
 .fc tbody td.fc-day {

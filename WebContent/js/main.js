@@ -7,23 +7,10 @@ $(document).ready(function () {
       left: '',
       right: ''
     },
-    dayClick: function(date, jsEvent, view) {
-
-        // console.info('---');
-      // console.log('Clicked on: ' + date.format());
-        // console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-        // console.log('Current view: ' + view.name);
-
-        // FIXME: remove handler until we know how to manage event creation
-        // $('.add-button').remove();
-        // $('.fc-today').removeClass('fc-today');
-        // $('.fc-state-highlight').removeClass('fc-state-highlight');
-
-        // // change the day's background color just for fun
-        // $(this).addClass('fc-state-highlight fc-today');
-        // $(this).append('<button class="add-button btn btn-default">+</button>');
-
-    },
+    nowIndicator: true,
+    editable: true,
+    minTime: "00:00:00",
+    maxTime: "23:59:59",
     handleWindowResize: true,
     height: getCalendarHeight(),
     events: function(start, end, timezone, callback) {
@@ -111,10 +98,10 @@ $(document).ready(function () {
     $('#calendar').fullCalendar( 'changeView', 'month' );
   });
   $('#weekButton').click(function(){
-    $('#calendar').fullCalendar( 'changeView', 'basicWeek' );
+    $('#calendar').fullCalendar( 'changeView', 'agendaWeek' );
   });
   $('#dayButton').click(function(){
-    $('#calendar').fullCalendar( 'changeView', 'basicDay' );
+    $('#calendar').fullCalendar( 'changeView', 'agendaDay' );
   });
 
   /**
