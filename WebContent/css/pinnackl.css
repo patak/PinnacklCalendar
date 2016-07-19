@@ -47,6 +47,10 @@ th {
   box-shadow: 0 0 20px 0 #000000;
 }
 
+body .fc-event {
+    cursor: pointer;
+}
+
 .add-button {
 
 }
@@ -104,3 +108,10 @@ body .dtp-select-minute[fill="#8BC34A"], body .dtp-select-hour[fill="#8BC34A"] {
   fill: #26316D;
 }
 
+.modal {
+  color: #000000;
+}
+
+.modal .modal-title {
+  color: #3F51B5;
+}
