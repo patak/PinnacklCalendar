@@ -25,16 +25,67 @@ $(document).ready(function () {
 
     },
     handleWindowResize: true,
-    windowResize: function(view) {
-        
+    height: getCalendarHeight(),
+    events: function(start, end, timezone, callback) {
+      // console.log(start.unix());
+      $.ajax({
+          url: 'api/events',
+          dataType: 'json',
+          data: {
+              // our hypothetical feed requires UNIX timestamps
+              start: start.unix(),
+              end: end.unix()
+          },
+          success: function(doc) {
+            var events = [];
+            $(doc).each(function(idx, evnt) {
+              var title = typeof evnt.name !== 'undefined' ? evnt.name : null;
+              var start = typeof evnt.startDate !== 'undefined' ? evnt.startDate : null;
+              var end = typeof evnt.finishDate !== 'undefined' ? evnt.finishDate : null;
+              var description = typeof evnt.description !== 'undefined' ? evnt.description : null;
+              // ...
+
+              events.push({
+                title: title,
+                start: start,
+                end: end,
+                description,
+              });
+            });
+            callback(events);
+          }
+      });
     },
-    // events: [{
-    //   title:"My repeating event",
-    //   start: '10:00', // a start time (10am in this example)
-    //   // end: '14:00', // an end time (6pm in this example)
-    //   dow: [ 1, 4 ] // Repeat monday and thursday
-    // }],
-    events: 'json/getallevents'
+    eventClick: function(calEvent, jsEvent, view) {
+      // Create a string template to generate the modal content
+      var template = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">${calEvent.title}</h4>
+          </div>
+          <div class="modal-body">
+            <p class="modal-section">Date</p>
+            <p>${computeDate(calEvent.start, calEvent.end)}</p>
+            <p>One fine body&hellip;</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div><!-- /.modal-content -->
+      `;
+
+      // console.log(template);
+      $(".modal-dialog").html(template);
+      $('#showEventModal').modal();
+    },
+  });
+
+  $(window).resize(function() {
+    $('#calendar').fullCalendar('option', 'height', getCalendarHeight());
   });
 
   currDayCol = "";
@@ -66,8 +117,34 @@ $(document).ready(function () {
     $('#calendar').fullCalendar( 'changeView', 'basicDay' );
   });
 
-  // $('#calendar').fullCalendar('addEventSource', [
-  // ]);
+  /**
+   * Compute the height of the calendar
+   * @return {[type]} [description]
+   */
+  function getCalendarHeight() {
+    return ($(window).height()*75)/100;
+  }
+
+  /**
+   * Compute the date string Date start - Date end 
+   * @param  {Moment} dateStartObject  [description]
+   * @param  {Moment} dateFinishObject [description]
+   * @return {String}                  [description]
+   */
+  function computeDate (dateStartObject, dateFinishObject) {
+    var dateEnd = "",
+        separator = "";
+    if (dateFinishObject) {
+      dateEnd = dateFinishObject.format('ddd, D MMM YYYY HH:mm');
+      separator = "-";
+    }
+
+    if (dateStartObject) {
+      return `${dateStartObject.format('ddd, D MMM YYYY HH:mm')} ${separator} ${dateEnd}`;
+    }
+
+    return dateEnd;
+  }
 
   /**
    * Add Google Map
@@ -83,15 +160,6 @@ $(document).ready(function () {
   if (map) {
     // Lancement de la construction de la carte google map
     google.maps.event.addDomListener(window, 'load', initMap);
-
-    // $('#datetimepickerStart').datepicker({
-    //     locale: 'fr',
-    //     useCurrent: true,
-    // });
-    // $('#datetimepickerFinish').datepicker({
-    //     locale: 'fr',
-    //     useCurrent: true,
-    // });
 
     $('#finishDate').bootstrapMaterialDatePicker({weekStart: 0, format : 'DD/MM/YYYY HH:mm'});
     $('#startDate').bootstrapMaterialDatePicker({weekStart: 0, format : 'DD/MM/YYYY HH:mm'}).on('change', function(e, date) {
