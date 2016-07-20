@@ -18,6 +18,7 @@
   "dependencies": {
     "bootstrap-material-datetimepicker": "^2.7.1",
     "moment": "momentjs#^2.14.1",
-    "fullcalendar": "^2.9.0"
+    "fullcalendar": "^2.9.0",
+    "bootstrap": "^3.3.6"
   }
 }
