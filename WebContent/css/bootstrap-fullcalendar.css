@@ -123,7 +123,7 @@ td.fc-day-number.fc-today.fc-state-highlight:before {
 }
 
 /* Add color to the today column */
-th.fc-day-header.fc-widget-header.fc-wed.current-day-column {
+th.fc-day-header.fc-widget-header.current-day-column {
     color: #3a87ad;
 }
 

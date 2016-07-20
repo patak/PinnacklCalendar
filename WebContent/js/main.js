@@ -69,22 +69,26 @@ $(document).ready(function () {
       $(".modal-dialog").html(template);
       $('#showEventModal').modal();
     },
+    viewRender: function () {
+      var currentDay = window.moment().format('ddd').toLowerCase();
+      var moment = $('#calendar').fullCalendar('getDate');
+      var currDayCol = moment.format('ddd');
+
+      if (currentDay != currDayCol) {
+        currDayCol = currentDay;
+      }
+
+      // Add calendar button listeners
+      $('th.fc-day-header.fc-widget-header.fc-' + currDayCol.toLowerCase()).addClass('current-day-column');
+
+      $('.dataToday').html(moment.format('MMMM YYYY'));
+    }
   });
 
   $(window).resize(function() {
     $('#calendar').fullCalendar('option', 'height', getCalendarHeight());
   });
 
-  currDayCol = "";
-  var moment = $('#calendar').fullCalendar('getDate');
-  if (moment.format) {
-    var currDayCol = moment.format('ddd');
-    $('.dataToday').html(moment.format('MMMM YYYY'));
-  }
-
-  // Add calendar button listeners
-  $('th.fc-day-header.fc-widget-header.fc-' + currDayCol.toLowerCase()).addClass('current-day-column');
-  
   $('#prevButton').click(function(){
     $('#calendar').fullCalendar('prev');
   });
