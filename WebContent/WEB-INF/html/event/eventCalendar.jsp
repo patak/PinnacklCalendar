@@ -13,7 +13,7 @@
 				Next
 				<span class="glyphicon glyphicon-chevron-right"></span>
 			</button>
-			<button id="todayButton" class="btn btn-default">Today</button>
+			<button id="todayButton" class="btn btn-default"><i class="material-icons calendar-icon">today</i>Today</button>
 			<span class="dataToday"></span>
 		</div>
 		<div class="calendar-control right-button">
