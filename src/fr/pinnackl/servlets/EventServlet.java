@@ -137,7 +137,7 @@ public class EventServlet extends HttpServlet {
 				}
 
 				if (photoRequest.getSize() > 0) {
-					if (photoRequest.getContentType() != "image/jpeg" || photoRequest.getContentType() != "image/png") {
+					if (!photoRequest.getContentType().equals("image/jpeg") && !photoRequest.getContentType().equals("image/png")) {
 						request.setAttribute("errorMessage", "Wrong file format");
 						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 					}
