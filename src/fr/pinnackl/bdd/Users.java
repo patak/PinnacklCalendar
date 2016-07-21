@@ -149,6 +149,53 @@ public class Users {
 		return allUsers;
 	}
 
+	public List<User> getEventFriends(Integer eventId) {
+		List<User> friendUsers = new ArrayList<User>();
+
+		// DB Connection
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+
+		loadDatabase();
+
+		try {
+			preparedStatement = connection.prepareStatement(
+					"SELECT u.* FROM shared as sh LEFT JOIN users as u ON (sh.user_id = u.user_id) WHERE sh.event_id = ?");
+			preparedStatement.setLong(1, eventId);
+
+			result = preparedStatement.executeQuery();
+
+			while (result.next()) {
+				Integer id = result.getInt("user_id");
+				String pseudo = result.getString("pseudo");
+				// String email = result.getString("email");
+
+				User user = new User();
+				user.setId(id);
+				user.setPseudo(pseudo);
+
+				friendUsers.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Close Connection
+			try {
+				if (result != null)
+					result.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e2) {
+				// TODO: handle exception
+			}
+		}
+
+		return friendUsers;
+	}
+
 	public User getUser(String pseudo) {
 		for (User u : getUsers()) {
 			if (u.getPseudo().equals(pseudo)) {
