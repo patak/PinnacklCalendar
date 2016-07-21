@@ -5,7 +5,7 @@
 <jsp:directive.include file="../header.jsp"/>
 
 	<h1>${title}</h1>
-	
+
 	<%if (request.getAttribute("success") != null){%>
 		<div class="alert alert-success" role="alert">
 			${success}
@@ -16,7 +16,7 @@
 			${errorMessage}
 		</div>
 		<% } %>
-		<form class="form-horizontal" action="${action}" method="post">
+		<form class="form-horizontal eventForm" action="${action}" method="post">
 			<% if (request.getAttribute("action") != "change") { %>
 			  <div class="form-group">
 			    <label for="pseudo" class="col-sm-2 control-label">Pseudo</label>
