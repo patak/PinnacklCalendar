@@ -136,7 +136,7 @@ public class Users {
 		return users;
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getUsersPseudo() {
 		List<User> allUsers = new ArrayList<User>();
 
 		for (User u : getUsers()) {
@@ -149,7 +149,7 @@ public class Users {
 		return allUsers;
 	}
 
-	public User getUser(String pseudo) {
+	public User getUserByPseudo(String pseudo) {
 		for (User u : getUsers()) {
 			if (u.getPseudo().equals(pseudo)) {
 				return u;
@@ -159,11 +159,11 @@ public class Users {
 	}
 
 	public boolean checkPseudo(String pseudo) {
-		return (this.getUser(pseudo) != null);
+		return (this.getUserByPseudo(pseudo) != null);
 	}
 
 	public boolean checkPseudoWithPassword(String pseudo, String password) {
-		User u = this.getUser(pseudo);
+		User u = this.getUserByPseudo(pseudo);
 		if (u != null) {
 			return BCrypt.checkpw(password, u.getPassword());
 		}
