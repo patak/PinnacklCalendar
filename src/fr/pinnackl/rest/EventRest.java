@@ -12,10 +12,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import fr.pinnackl.bdd.Events;
+import fr.pinnackl.bdd.Users;
 import fr.pinnackl.beans.Event;
 import fr.pinnackl.beans.User;
 
@@ -50,6 +52,28 @@ public class EventRest {
 			if (event.getOrganizer().getId() != userId) {
 				jsonObject.put("sharedEvent", true);
 			}
+
+			/**
+			 * 
+			 */
+			Users usersDB = new Users();
+			List<User> friendUsers = usersDB.getEventFriends(event.getID());
+
+			JSONArray jsonArray = new JSONArray();
+
+			for (User u : friendUsers) {
+				JSONObject jsonFriendObject = new JSONObject();
+				if (u.getId() == userId) {
+					continue;
+				}
+
+				jsonFriendObject.put("id", u.getId());
+				jsonFriendObject.put("pseudo", u.getPseudo());
+
+				jsonArray.put(jsonFriendObject);
+			}
+
+			jsonObject.put("sharedUsers", jsonArray);
 
 			jsonObjects.add(jsonObject);
 		}
