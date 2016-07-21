@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.pinnackl.beans.Event;
+import fr.pinnackl.beans.User;
 
 public class Events {
 
@@ -103,6 +104,7 @@ public class Events {
 				Date startDate = result.getDate("startDate");
 				Date finishDate = result.getDate("finishDate");
 				Blob photo = result.getBlob("photo");
+				Integer organizer_id = result.getInt("organizer_id");
 
 				Event event = new Event();
 				event.setID(id);
@@ -118,6 +120,11 @@ public class Events {
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+
+				User user = new User();
+				user.setId(organizer_id);
+
+				event.setOrganizer(user);
 
 				events.add(event);
 

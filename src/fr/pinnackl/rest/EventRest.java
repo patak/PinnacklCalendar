@@ -46,6 +46,11 @@ public class EventRest {
 			jsonObject.put("startDate", event.getStartDate());
 			jsonObject.put("finishDate", event.getFinishDate());
 
+			jsonObject.put("sharedEvent", false);
+			if (event.getOrganizer().getId() != userId) {
+				jsonObject.put("sharedEvent", true);
+			}
+
 			jsonObjects.add(jsonObject);
 		}
 		// System.out.println(jsonObjects.toString());

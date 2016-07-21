@@ -16,6 +16,7 @@ $(document).ready(function () {
     events: function(start, end, timezone, callback) {
       // console.log(start.unix());
       $.ajax({
+          // FIXME : Get the current user ID from the rest API
           url: 'api/events',
           dataType: 'json',
           data: {
@@ -30,14 +31,21 @@ $(document).ready(function () {
               var start = typeof evnt.startDate !== 'undefined' ? evnt.startDate : null;
               var end = typeof evnt.finishDate !== 'undefined' ? evnt.finishDate : null;
               var description = typeof evnt.description !== 'undefined' ? evnt.description : null;
+              var sharedEvent = typeof evnt.sharedEvent !== 'undefined' ? evnt.sharedEvent : null;
               // ...
 
-              events.push({
+              var eventObj = {
                 title: title,
                 start: start,
                 end: end,
                 description,
-              });
+              };
+
+              if (sharedEvent) {
+                eventObj.color = "#F44336";
+              }
+
+              events.push(eventObj);
             });
             callback(events);
           }
@@ -56,11 +64,12 @@ $(document).ready(function () {
           <div class="modal-body">
             <p class="modal-section">Date</p>
             <p>${computeDate(calEvent.start, calEvent.end)}</p>
-            <p>One fine body&hellip;</p>
+            <p class="modal-section">Description</p>
+            <p>${calEvent.description}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary"><a href="">Edit event</a></button>
           </div>
         </div><!-- /.modal-content -->
       `;
