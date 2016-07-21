@@ -2,15 +2,19 @@ package fr.pinnackl.servlets;
 
 import java.io.IOException;
 
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
 import fr.pinnackl.bcrypt.BCrypt;
 import fr.pinnackl.bdd.Users;
 import fr.pinnackl.beans.User;
+import fr.pinnackl.mail.PinnacklMail;
 
 /**
  * Servlet implementation class UserServlet
@@ -110,23 +114,37 @@ public class UserServlet extends HttpServlet {
 	}
 
 	private void create(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		final String email = request.getParameter("email");
 		final String pseudo = request.getParameter("pseudo");
 		final String password = request.getParameter("password");
 
 		User user = new User();
 		Users usersDB = new Users();
 
-		if (pseudo != null && password != null) {
-			if (pseudo.isEmpty() || password.isEmpty()) {
-				request.setAttribute("errorMessage", "Set username and password");
+		if (email != null && pseudo != null && password != null) {
+			if (email.isEmpty() || pseudo.isEmpty() || password.isEmpty()) {
+				request.setAttribute("errorMessage", "Set all required fields");
+			} else if (!EmailValidator.getInstance().isValid(email)) {
+				request.setAttribute("errorMessage", "Wrong email format");
+			} else if (usersDB.checkEmail(email)) {
+				request.setAttribute("errorMessage", "There is already an account with this email");
 			} else if (usersDB.checkPseudo(pseudo)) {
 				request.setAttribute("errorMessage", "User already exists. Please chose another");
 			} else {
+				user.setEmail(email);
 				user.setPseudo(pseudo);
 				user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
 
 				usersDB.createUser(user);
 				request.setAttribute("success", "User succesfully created");
+
+				PinnacklMail mail = new PinnacklMail();
+				try {
+					mail.createAccountMail(user.getEmail(), user.getPseudo());
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		request.setAttribute("action", "create");
@@ -145,28 +163,38 @@ public class UserServlet extends HttpServlet {
 	}
 
 	private void change(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		final String pseudo = request.getParameter("pseudo");
-		final String password = request.getParameter("password");
+		final String currentPassword = request.getParameter("currentPassword");
 		final String newPassword = request.getParameter("newPassword");
 		final String confirmNewPassword = request.getParameter("confirmNewPassword");
 
-		if (newPassword == null || confirmNewPassword == null) {
+		User user = (User) request.getSession().getAttribute(USER_SESSION);
+		Users usersDB = new Users();
+
+		if (currentPassword == null || newPassword == null || confirmNewPassword == null) {
 			// just display the login
-		} else if (newPassword.isEmpty() || confirmNewPassword.isEmpty()) {
-			request.setAttribute("errorMessage", "Set new password");
-		} else {
+		} else if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmNewPassword.isEmpty()) {
+			request.setAttribute("errorMessage", "Set all fields");
+		} else if (usersDB.checkPseudoWithPassword(user.getPseudo(), currentPassword)) {
 			if (newPassword.equals(confirmNewPassword)) {
 
-				User user = (User) request.getSession().getAttribute(USER_SESSION);
 				user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt(12)));
 
-				Users usersDB = new Users();
 				usersDB.updateUserPassword(user);
+
+				PinnacklMail mail = new PinnacklMail();
+				try {
+					mail.changePasswordMail(user.getEmail(), user.getPseudo());
+				} catch (MessagingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				request.setAttribute("success", "Password changed");
 			} else {
 				request.setAttribute("errorMessage", "New passwords not identical");
 			}
+		} else {
+			request.setAttribute("errorMessage", "Bad current password");
 		}
 		request.setAttribute("action", "change");
 		request.setAttribute("title", "Change password");
