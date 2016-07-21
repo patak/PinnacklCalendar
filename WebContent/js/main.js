@@ -69,7 +69,7 @@ $(document).ready(function () {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary"><a href="">Edit event</a></button>
+            <button type="button" class="btn btn-secondary"><a href="">Edit event</a></button>
           </div>
         </div><!-- /.modal-content -->
       `;

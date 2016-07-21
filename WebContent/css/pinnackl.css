@@ -116,6 +116,15 @@ body .dtp-select-minute[fill="#8BC34A"], body .dtp-select-hour[fill="#8BC34A"] {
   color: #3F51B5;
 }
 
+.modal .modal-section {
+  font-size: 11px;
+  color: #9b9b9b;
+  font-weight: bold;
+  height: 22px;
+  line-height: 22px;
+  margin-top: 6px;
+}
+
 .calendar-icon {
   vertical-align: bottom;
   margin-right: 6px;
