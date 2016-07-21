@@ -3,10 +3,12 @@ package fr.pinnackl.rest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -15,17 +17,26 @@ import org.json.JSONObject;
 
 import fr.pinnackl.bdd.Events;
 import fr.pinnackl.beans.Event;
+import fr.pinnackl.beans.User;
 
 @Path("/events")
 public class EventRest {
+	private static final String USER_SESSION = "userSession";
+
 	@GET
 	@Produces("application/json")
-	public Response getEvents() throws JSONException {
+	public Response getEvents(@Context HttpServletRequest request) throws JSONException {
+		if (request.getSession().getAttribute(USER_SESSION) == null) {
+			return Response.status(400).build();
+		}
+
+		User user = (User) request.getSession().getAttribute(USER_SESSION);
+		Integer userId = (Integer) user.getId();
 
 		List<JSONObject> jsonObjects = new ArrayList<JSONObject>();
 
 		Events eventsDB = new Events();
-		List<Event> events = eventsDB.getEvents();
+		List<Event> events = eventsDB.getEvents(userId);
 
 		for (Event event : events) {
 			JSONObject jsonObject = new JSONObject();
@@ -45,7 +56,7 @@ public class EventRest {
 	@Path("{id}")
 	@GET
 	@Produces("application/json")
-	public Response getEvent(@PathParam("id")	 Integer id) throws JSONException {
+	public Response getEvent(@PathParam("id") Integer id) throws JSONException {
 
 		JSONObject jsonObject = new JSONObject();
 

@@ -21,7 +21,7 @@ import fr.pinnackl.beans.User;
  * Servlet implementation class EventServlet
  */
 @WebServlet(name = "event-servlet", description = "Servlet handling events for pinnackl project", urlPatterns = {
-		"/add", "/events" })
+		"/add", "/edit", "/events" })
 @MultipartConfig(maxFileSize = 1024 * 1024 * 16)
 public class EventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -50,6 +50,8 @@ public class EventServlet extends HttpServlet {
 		System.out.println(request.getParameter("id"));
 		if (uri.contains("/add")) {
 			this.add(request, response);
+		} else if (uri.contains("/edit")) {
+			this.edit(request, response);
 		} else if (uri.contains("/events")) {
 			this.events(request, response);
 		}
@@ -159,12 +161,27 @@ public class EventServlet extends HttpServlet {
 		}
 	}
 
-	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		Events eventsDB = new Events();
+	private void edit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if (request.getSession().getAttribute(USER_SESSION) == null) {
+			// Set the origin path to redirect after login
+			response.sendRedirect("login");
+		} else {
 
-		request.setAttribute("title", "Event");
-		request.setAttribute("eventsList", eventsDB.getEvents());
-		request.setAttribute("eventsTab", "active");
-		request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
+		}
+	}
+
+	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		if (request.getSession().getAttribute(USER_SESSION) == null)
+			response.sendRedirect("login");
+		else {
+			Events eventsDB = new Events();
+
+			User user = (User) request.getSession().getAttribute(USER_SESSION);
+			Integer userId = (Integer) user.getId();
+			request.setAttribute("title", "Event");
+			request.setAttribute("eventsList", eventsDB.getEvents(userId));
+			request.setAttribute("eventsTab", "active");
+			request.getRequestDispatcher("/WEB-INF/html/event/eventCalendar.jsp").forward(request, response);
+		}
 	}
 }

@@ -6,7 +6,6 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,20 +75,22 @@ public class Events {
 		}
 	}
 
-	public List<Event> getEvents() {
+	public List<Event> getEvents(Integer userId) {
 		List<Event> events = new ArrayList<Event>();
 
 		// DB Connection
-		Statement statement = null;
+		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
 
 		loadDatabase();
 
 		try {
+			preparedStatement = connection.prepareStatement(
+					"SELECT e.*, sh.* FROM events as e LEFT JOIN shared as sh ON (sh.user_id = ?) WHERE e.organizer_id = ? OR e.organizer_id = sh.owner_id;");
+			preparedStatement.setLong(1, userId);
+			preparedStatement.setLong(2, userId);
 
-			statement = connection.createStatement();
-
-			result = statement.executeQuery("SELECT * FROM events;");
+			result = preparedStatement.executeQuery();
 
 			// Retrieve Datas
 			while (result.next()) {
