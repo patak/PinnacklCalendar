@@ -36,6 +36,13 @@ public class UserServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		final String uri = request.getRequestURI();
+		if (request.getSession().getAttribute(USER_SESSION) == null && uri.contains("/login") == false) {
+			if (uri.contains("/create"))
+				this.create(request, response);
+			else
+				response.sendRedirect("login");
+			return;
+		}
 		if (uri.contains("/login")) {
 			this.login(request, response);
 		} else if (uri.contains("/list")) {
@@ -49,7 +56,8 @@ public class UserServlet extends HttpServlet {
 		} else if (uri.contains("/change")) {
 			this.change(request, response);
 		} else {
-			this.home(request, response);
+			// this.home(request, response);
+			response.sendRedirect("events");
 		}
 	}
 
@@ -64,14 +72,10 @@ public class UserServlet extends HttpServlet {
 	}
 
 	private void home(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (request.getSession().getAttribute(USER_SESSION) == null)
-			response.sendRedirect("login");
-		else {
-			User user = (User) request.getSession().getAttribute(USER_SESSION);
-			request.setAttribute("login", user.getPseudo());
-			request.setAttribute("homeTab", "active");
-			request.getRequestDispatcher("/WEB-INF/html/home.jsp").forward(request, response);
-		}
+		User user = (User) request.getSession().getAttribute(USER_SESSION);
+		request.setAttribute("login", user.getPseudo());
+		request.setAttribute("homeTab", "active");
+		request.getRequestDispatcher("/WEB-INF/html/home.jsp").forward(request, response);
 	}
 
 	private void login(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -91,7 +95,7 @@ public class UserServlet extends HttpServlet {
 
 				request.getSession().setAttribute(USER_SESSION, user);
 
-				response.sendRedirect("home");
+				response.sendRedirect("events");
 				return;
 			} else {
 				request.setAttribute("errorMessage", "Bad password");
@@ -141,11 +145,6 @@ public class UserServlet extends HttpServlet {
 	}
 
 	private void change(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		if (request.getSession().getAttribute(USER_SESSION) == null) {
-			response.sendRedirect("login");
-			return;
-		}
-
 		final String pseudo = request.getParameter("pseudo");
 		final String password = request.getParameter("password");
 		final String newPassword = request.getParameter("newPassword");
