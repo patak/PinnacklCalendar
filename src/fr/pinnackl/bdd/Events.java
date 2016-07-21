@@ -142,7 +142,7 @@ public class Events {
 	}
 
 	public Event getEventByID(Integer eventID) {
-		for (Event e : getEvents()) {
+		for (Event e : getEvents(eventID)) {
 			if (e.getID().equals(eventID)) {
 				return e;
 			}
