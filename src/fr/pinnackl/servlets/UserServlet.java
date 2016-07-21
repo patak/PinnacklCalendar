@@ -91,7 +91,7 @@ public class UserServlet extends HttpServlet {
 		} else if (usersDB.checkPseudo(pseudo)) {
 			if (usersDB.checkPseudoWithPassword(pseudo, password)) {
 
-				User user = usersDB.getUser(pseudo);
+				User user = usersDB.getUserByPseudo(pseudo);
 
 				request.getSession().setAttribute(USER_SESSION, user);
 
@@ -139,7 +139,7 @@ public class UserServlet extends HttpServlet {
 		Users usersDB = new Users();
 
 		request.setAttribute("title", "List of All Users");
-		request.setAttribute("userList", usersDB.getAllUsers());
+		request.setAttribute("userList", usersDB.getUsersPseudo());
 		request.setAttribute("listTab", "active");
 		request.getRequestDispatcher("/WEB-INF/html/user/userList.jsp").forward(request, response);
 	}
