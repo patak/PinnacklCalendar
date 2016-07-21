@@ -129,8 +129,8 @@ public class Events {
 			try {
 				if (result != null)
 					result.close();
-				if (statement != null)
-					statement.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
 				if (connection != null)
 					connection.close();
 
