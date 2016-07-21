@@ -56,7 +56,8 @@ public class UserServlet extends HttpServlet {
 		} else if (uri.contains("/change")) {
 			this.change(request, response);
 		} else {
-			this.home(request, response);
+			// this.home(request, response);
+			response.sendRedirect("events");
 		}
 	}
 
@@ -94,7 +95,7 @@ public class UserServlet extends HttpServlet {
 
 				request.getSession().setAttribute(USER_SESSION, user);
 
-				response.sendRedirect("home");
+				response.sendRedirect("events");
 				return;
 			} else {
 				request.setAttribute("errorMessage", "Bad password");
