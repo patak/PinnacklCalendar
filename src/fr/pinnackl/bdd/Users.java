@@ -35,9 +35,11 @@ public class Users {
 		loadDatabase();
 
 		try {
-			preparedStatement = connection.prepareStatement("INSERT INTO users(pseudo, password) VALUES(?, ?);");
-			preparedStatement.setString(1, user.getPseudo());
-			preparedStatement.setString(2, user.getPassword());
+			preparedStatement = connection
+					.prepareStatement("INSERT INTO users(email, pseudo, password) VALUES(?, ?, ?);");
+			preparedStatement.setString(1, user.getEmail());
+			preparedStatement.setString(2, user.getPseudo());
+			preparedStatement.setString(3, user.getPassword());
 
 			preparedStatement.executeUpdate();
 
@@ -101,16 +103,18 @@ public class Users {
 
 			statement = connection.createStatement();
 
-			result = statement.executeQuery("SELECT user_id, pseudo, password FROM users;");
+			result = statement.executeQuery("SELECT user_id, email, pseudo, password FROM users;");
 
 			// Retrieve Datas
 			while (result.next()) {
 				Integer id = result.getInt("user_id");
+				String email = result.getString("email");
 				String pseudo = result.getString("pseudo");
 				String password = result.getString("password");
 
 				User user = new User();
 				user.setId(id);
+				user.setEmail(email);
 				user.setPseudo(pseudo);
 				user.setPassword(password);
 
@@ -147,6 +151,19 @@ public class Users {
 		}
 
 		return allUsers;
+	}
+
+	public User getUserByEmail(String email) {
+		for (User u : getUsers()) {
+			if (u.getEmail().equals(email)) {
+				return u;
+			}
+		}
+		return null;
+	}
+
+	public boolean checkEmail(String email) {
+		return (this.getUserByEmail(email) != null);
 	}
 
 	public User getUserByPseudo(String pseudo) {
