@@ -12,25 +12,39 @@
 		</div>
 	<% }else { %>
 		<%if (request.getAttribute("errorMessage") != null) { %>
-		<div class="alert alert-danger" role="alert">
-			${errorMessage}
-		</div>
+			<div class="alert alert-danger" role="alert">
+				${errorMessage}
+			</div>
 		<% } %>
 		<form class="form-horizontal eventForm" action="${action}" method="post">
 			<% if (request.getAttribute("action") != "change") { %>
-			  <div class="form-group">
-			    <label for="pseudo" class="col-sm-2 control-label">Pseudo</label>
-			    <div class="col-sm-8">
-			      <input type="text" class="form-control" id="pseudo" placeholder="Pseudo" name="pseudo">
-			    </div>
-			  </div>
-			  <div class="form-group">
-			    <label for="password" class="col-sm-2 control-label">Password</label>
-			    <div class="col-sm-8">
-			      <input type="password" class="form-control" id="password" placeholder="Password" name="password">
-			    </div>
-			  </div>
+				<% if (request.getAttribute("action") == "create") { %>
+					<div class="form-group">
+					  <label for="email" class="col-sm-2 control-label">Email</label>
+					  <div class="col-sm-8">
+					    <input type="email" class="form-control" id="email" placeholder="Email" name="email" required>
+					  </div>
+					</div>
+				<% } %>
+				<div class="form-group">
+				  <label for="pseudo" class="col-sm-2 control-label">Pseudo</label>
+				  <div class="col-sm-8">
+				    <input type="text" class="form-control" id="pseudo" placeholder="Pseudo" name="pseudo" required>
+				  </div>
+				</div>
+				<div class="form-group">
+				  <label for="password" class="col-sm-2 control-label">Password</label>
+				  <div class="col-sm-8">
+				    <input type="password" class="form-control" id="password" placeholder="Password" name="password" required>
+				  </div>
+				</div>
 		  <% } else { %>
+	  		<div class="form-group">
+				<label for="currentPassword" class="col-sm-2 control-label">Current Password</label>
+				<div class="col-sm-8">
+					<input type="password" class="form-control" id="currentPassword" placeholder="Current Password" name="currentPassword">
+				</div>
+			</div>
 		  	<div class="form-group">
 				<label for="newPassword" class="col-sm-2 control-label">New Password</label>
 				<div class="col-sm-8">
