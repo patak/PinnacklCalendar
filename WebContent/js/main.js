@@ -11,6 +11,7 @@ $(document).ready(function () {
     editable: true,
     minTime: "00:00:00",
     maxTime: "23:59:59",
+    allDayDefault: false,
     handleWindowResize: true,
     height: getCalendarHeight(),
     events: function(start, end, timezone, callback) {
@@ -33,18 +34,20 @@ $(document).ready(function () {
               var end = typeof evnt.finishDate !== 'undefined' ? evnt.finishDate : null;
               var description = typeof evnt.description !== 'undefined' ? evnt.description : null;
               var sharedEvent = typeof evnt.sharedEvent !== 'undefined' ? evnt.sharedEvent : null;
+              var sharedUsers = typeof evnt.sharedUsers !== 'undefined' ? evnt.sharedUsers : null;
               // ...
 
               var eventObj = {
-            	id: id,
+                id: id,
                 title: title,
                 start: start,
                 end: end,
-                description,
+                description: description,
               };
 
               if (sharedEvent) {
                 eventObj.color = "#F44336";
+                eventObj.sharedUsers = sharedUsers;
               }
 
               events.push(eventObj);
@@ -54,6 +57,26 @@ $(document).ready(function () {
       });
     },
     eventClick: function(calEvent, jsEvent, view) {
+
+      var friendsTpl = "";
+      if (calEvent.sharedUsers) {
+        for (var i = calEvent.sharedUsers.length - 1; i >= 0; i--) {
+          friendsTpl += `
+            <span class="user-circle tooltip">
+              <span class="tooltiptext">${calEvent.sharedUsers[i].pseudo}</span>
+              <span>${calEvent.sharedUsers[i].pseudo.charAt(0).toUpperCase()}</span>
+            </span>
+          `;
+        };
+      }
+
+      friendsTpl += `
+        <span class="user-circle add tooltip">
+          <span class="tooltiptext">Add</span>
+          <a href="/PinnacklCalendar/edit?id=${calEvent.id}">+</a>
+        </span>
+      `;
+
       // Create a string template to generate the modal content
       var template = `
         <div class="modal-content">
@@ -68,10 +91,12 @@ $(document).ready(function () {
             <p>${computeDate(calEvent.start, calEvent.end)}</p>
             <p class="modal-section">Description</p>
             <p>${calEvent.description}</p>
+            <p class="modal-section">Participant</p>
+            <p>${friendsTpl}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-secondary"><a href="http://localhost:8080/PinnacklCalendar/edit?id=${calEvent.id}">Edit event</a></button>
+            <button type="button" class="btn btn-secondary"><a href="/PinnacklCalendar/edit?id=${calEvent.id}">Edit event</a></button>
           </div>
         </div><!-- /.modal-content -->
       `;
@@ -128,7 +153,7 @@ $(document).ready(function () {
   }
 
   /**
-   * Compute the date string Date start - Date end 
+   * Compute the date string Date start - Date end
    * @param  {Moment} dateStartObject  [description]
    * @param  {Moment} dateFinishObject [description]
    * @return {String}                  [description]
@@ -189,9 +214,9 @@ $(document).ready(function () {
     // map-canvas est le conteneur HTML de la carte Google Map
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   }
-   
+
   function findPlace() {
-    // Réinitialisation du marqueur   
+    // Réinitialisation du marqueur
     if(marker != null)
       marker.setMap(null);
     // Récupération de l'adresse tapée dans le formulaire
