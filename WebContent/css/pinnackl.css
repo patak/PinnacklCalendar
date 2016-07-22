@@ -141,7 +141,13 @@ body .dtp-select-minute[fill="#8BC34A"], body .dtp-select-hour[fill="#8BC34A"] {
 }
 
 .user-circle.add {
-  margin-left: 2em;
+  /*margin-left: 2em;*/
+}
+
+.user-circle.add a {
+  color: #ffffff;
+  display: inline-block;
+  width: 100%;
 }
 
 /* Tooltip container */
