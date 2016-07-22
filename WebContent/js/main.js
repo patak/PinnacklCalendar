@@ -27,6 +27,7 @@ $(document).ready(function () {
           success: function(doc) {
             var events = [];
             $(doc).each(function(idx, evnt) {
+              var id = typeof evnt.id !== 'undefined' ? evnt.id : null;
               var title = typeof evnt.name !== 'undefined' ? evnt.name : null;
               var start = typeof evnt.startDate !== 'undefined' ? evnt.startDate : null;
               var end = typeof evnt.finishDate !== 'undefined' ? evnt.finishDate : null;
@@ -35,6 +36,7 @@ $(document).ready(function () {
               // ...
 
               var eventObj = {
+            	id: id,
                 title: title,
                 start: start,
                 end: end,
@@ -69,7 +71,7 @@ $(document).ready(function () {
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-secondary"><a href="">Edit event</a></button>
+            <button type="button" class="btn btn-secondary"><a href="http://localhost:8080/PinnacklCalendar/edit?id=${calEvent.id}">Edit event</a></button>
           </div>
         </div><!-- /.modal-content -->
       `;
