@@ -1,8 +1,10 @@
 package fr.pinnackl.servlets;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.servlet.ServletException;
@@ -25,6 +27,7 @@ import fr.pinnackl.beans.User;
 @MultipartConfig(maxFileSize = 1024 * 1024 * 16)
 public class EventServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String SAVE_DIR = "upload";
 	private static final String USER_SESSION = "userSession";
 
 	/**
@@ -87,6 +90,8 @@ public class EventServlet extends HttpServlet {
 			final String finishDateRequest = request.getParameter("finishDate");
 			final Part photoRequest = request.getPart("photo");
 
+			System.out.println(request.getParameter("share"));
+
 			Double latitude = null;
 			Double longitude = null;
 			if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
@@ -99,8 +104,8 @@ public class EventServlet extends HttpServlet {
 			Date startDate = null;
 			Date finishDate = null;
 
-			InputStream photo = null; // input stream of the upload file
-			photo = photoRequest.getInputStream();
+			// InputStream photo = null; // input stream of the upload file
+			// photo = photoRequest.getInputStream();
 
 			Event event = new Event();
 			Events eventsDB = new Events();
@@ -136,12 +141,40 @@ public class EventServlet extends HttpServlet {
 					}
 				}
 
-				if (photoRequest.getSize() > 0) {
-					if (!photoRequest.getContentType().equals("image/jpeg")
-							&& !photoRequest.getContentType().equals("image/png")) {
-						request.setAttribute("errorMessage", "Wrong file format");
-						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
-					}
+				/*
+				 * if (photoRequest.getSize() > 0) { if
+				 * (!photoRequest.getContentType().equals("image/jpeg") &&
+				 * !photoRequest.getContentType().equals("image/png")) {
+				 * request.setAttribute("errorMessage", "Wrong file format");
+				 * request.getRequestDispatcher(
+				 * "/WEB-INF/html/event/eventForm.jsp").forward(request,
+				 * response); } }
+				 */
+
+				String[] supportedContentTypes = { "image/jpeg", "image/png" };
+
+				String appPath = request.getServletContext().getRealPath("");
+				String savePath = appPath + File.separator + SAVE_DIR;
+
+				System.out.println(savePath);
+				File fileSaveDir = new File(savePath);
+				if (!fileSaveDir.exists()) {
+					fileSaveDir.mkdir();
+				}
+
+				String fileName = extractFileName(photoRequest);
+				String contentType = photoRequest.getContentType();
+
+				Boolean fileError = false;
+				if (fileName == null || fileName.isEmpty())
+					fileError = true;
+				if (contentType == null || contentType.isEmpty())
+					fileError = true;
+				if (!Arrays.asList(supportedContentTypes).contains(contentType))
+					fileError = true;
+
+				if (!fileError) {
+					photoRequest.write(savePath + File.separator + fileName);
 				}
 
 				event.setName(name);
@@ -151,7 +184,7 @@ public class EventServlet extends HttpServlet {
 				event.setLongitude(longitude);
 				event.setStartDate(startDate);
 				event.setFinishDate(finishDate);
-				event.setPhoto(photo);
+				// event.setPhoto(photo);
 				event.setOrganizer((User) request.getSession().getAttribute(USER_SESSION));
 
 				eventsDB.createEvent(event);
@@ -159,6 +192,17 @@ public class EventServlet extends HttpServlet {
 			}
 		}
 		request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
+	}
+
+	private String extractFileName(Part part) {
+		String contentDisp = part.getHeader("content-disposition");
+		String[] items = contentDisp.split(";");
+		for (String s : items) {
+			if (s.trim().startsWith("filename")) {
+				return s.substring(s.indexOf("=") + 2, s.length() - 1);
+			}
+		}
+		return "";
 	}
 
 	private void edit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
