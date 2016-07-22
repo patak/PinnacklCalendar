@@ -206,7 +206,7 @@ public class Users {
 			while (result.next()) {
 				Integer id = result.getInt("user_id");
 				String pseudo = result.getString("pseudo");
-				// String email = result.getString("email");
+				String email = result.getString("email");
 
 				User user = new User();
 				user.setId(id);
