@@ -55,6 +55,32 @@ public class PinnacklMail {
 
 	}
 
+	public void shareEventMail(String email, String pseudo, String event) throws AddressException, MessagingException {
+
+		mailServerProperties();
+
+		// Step2
+		System.out.println("\n\n 2nd ===> get Mail Session..");
+		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+		MimeMessage generateMailMessage = new MimeMessage(getMailSession);
+		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+		generateMailMessage.setSubject("New event shared on Pinnackl Calendar");
+
+		StringBuilder builder = new StringBuilder("<html><body>");
+		builder.append("<h2>Hello " + pseudo + "</h2><br/>");
+		builder.append("<p>The event <b>"+event+"</b> has been shared to you.</p><br/>");
+		builder.append("<p></p><br/>");
+		builder.append("</body></html>");
+
+		String emailBody = builder.toString();
+
+		generateMailMessage.setContent(emailBody, "text/html");
+		System.out.println("Mail Session has been created successfully..");
+
+		sendMailProperties(generateMailMessage);
+
+	}
+
 	public void changePasswordMail(String email, String pseudo) throws AddressException, MessagingException {
 
 		mailServerProperties();
