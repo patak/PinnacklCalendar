@@ -16,7 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import fr.pinnackl.bdd.Events;
+import fr.pinnackl.bdd.Shares;
+import fr.pinnackl.bdd.Users;
 import fr.pinnackl.beans.Event;
+import fr.pinnackl.beans.Share;
 import fr.pinnackl.beans.User;
 
 /**
@@ -241,6 +244,8 @@ public class EventServlet extends HttpServlet {
 			final String finishDateRequest = request.getParameter("finishDate");
 			final Part photoRequest = request.getPart("photo");
 
+			final String emailsRequest = request.getParameter("share");
+
 			Double latitude = null;
 			Double longitude = null;
 			if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
@@ -309,6 +314,26 @@ public class EventServlet extends HttpServlet {
 
 				eventsDB.updateEvent(event);
 				request.setAttribute("success", "Event succesfully updated");
+
+				String[] emails = emailsRequest.split("\",\"");
+				emails[0] = emails[0].replace("[\"", "");
+				emails[emails.length - 1] = emails[emails.length - 1].replace("\"]", "");
+
+				if (emails.length > 0) {
+					for (String e : emails) {
+						Users usersDB = new Users();
+						User user = usersDB.getUserByEmail(e);
+						if (user != null) {
+							Share share = new Share();
+							share.setEvent(event);
+							share.setOwner(event.getOrganizer());
+							share.setUser(user);
+
+							Shares shareDB = new Shares();
+							shareDB.createShare(share);
+						}
+					}
+				}
 			}
 		}
 		request.setAttribute("event", event);
