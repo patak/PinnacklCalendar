@@ -139,7 +139,7 @@ public class Events {
 		try {
 			if (userId != null) {
 				preparedStatement = connection.prepareStatement(
-						"SELECT e.*, sh.* FROM events as e LEFT JOIN shared as sh ON (sh.user_id = ?) WHERE e.organizer_id = ? OR e.organizer_id = sh.owner_id;");
+						"SELECT e.*, sh.* FROM events as e LEFT JOIN shared as sh ON (sh.user_id = ?) WHERE e.organizer_id = ? OR e.organizer_id = sh.owner_id GROUP BY e.event_id;");
 				preparedStatement.setLong(1, userId);
 				preparedStatement.setLong(2, userId);
 

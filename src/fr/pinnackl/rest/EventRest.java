@@ -47,6 +47,10 @@ public class EventRest {
 			jsonObject.put("description", event.getDescription());
 			jsonObject.put("startDate", event.getStartDate());
 			jsonObject.put("finishDate", event.getFinishDate());
+			jsonObject.put("place", event.getPlace());
+			jsonObject.put("latitude", event.getLatitude());
+			jsonObject.put("longitude", event.getLongitude());
+			jsonObject.put("photo", event.getPhoto());
 
 			jsonObject.put("sharedEvent", false);
 			if (event.getOrganizer().getId() != userId) {
@@ -80,6 +84,40 @@ public class EventRest {
 		// System.out.println(jsonObjects.toString());
 		return Response.status(200).type(MediaType.APPLICATION_JSON + "; charset=UTF-8").entity(jsonObjects.toString())
 				.build();
+	}
+
+	@Path("plop")
+	@GET
+	@Produces("application/json")
+	public Response getSharedUser(@Context HttpServletRequest request) throws JSONException {
+		if (request.getSession().getAttribute(USER_SESSION) == null) {
+			return Response.status(400).build();
+		}
+
+		User user = (User) request.getSession().getAttribute(USER_SESSION);
+		Integer userId = (Integer) user.getId();
+
+		/**
+		 * 
+		 */
+		Users usersDB = new Users();
+		List<User> friendUsers = usersDB.getPastEventFriends();
+
+		JSONArray jsonArray = new JSONArray();
+
+		for (User u : friendUsers) {
+			JSONObject jsonFriendObject = new JSONObject();
+			if (u.getId() == userId) {
+				continue;
+			}
+
+			jsonFriendObject.put("id", u.getId());
+			jsonFriendObject.put("pseudo", u.getPseudo());
+
+			jsonArray.put(jsonFriendObject);
+		}
+
+		return Response.status(200).build();
 	}
 
 	@Path("{id}")
