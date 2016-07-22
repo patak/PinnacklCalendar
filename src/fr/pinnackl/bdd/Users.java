@@ -187,6 +187,59 @@ public class Users {
 		return false;
 	}
 
+	public List<User> getPastEventFriends() {
+		List<User> friendUsers = new ArrayList<User>();
+
+		// DB Connection
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		ResultSet subResult = null;
+
+		loadDatabase();
+
+		try {
+			preparedStatement = connection.prepareStatement(
+					"SELECT sh.* FROM shared as sh LEFT JOIN users as u ON (sh.user_id = u.user_id) WHERE sh.user_id = ?");
+			preparedStatement.setLong(1, 6);
+
+			result = preparedStatement.executeQuery();
+
+			while (result.next()) {
+				Integer id = result.getInt("event_id");
+
+				preparedStatement = connection.prepareStatement(
+						"SELECT * FROM users as u LEFT JOIN shared as sh ON (sh.user_id = u.user_id OR sh.owner_id = u.user_id) WHERE sh.event_id = ? GROUP BY u.user_id");
+				preparedStatement.setLong(1, id);
+
+				subResult = preparedStatement.executeQuery();
+
+				// preparedStatement
+				// User user = new User();
+				// user.setId(id);
+				// user.setPseudo(pseudo);
+
+				// friendUsers.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Close Connection
+			try {
+				if (result != null)
+					result.close();
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch (SQLException e2) {
+				// TODO: handle exception
+			}
+		}
+
+		return friendUsers;
+	}
+
 	public List<User> getEventFriends(Integer eventId) {
 		List<User> friendUsers = new ArrayList<User>();
 
