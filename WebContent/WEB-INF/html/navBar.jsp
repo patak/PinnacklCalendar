@@ -22,7 +22,7 @@
         	<li><a href="logout">Logout</a></li>
         <% } else { %>
         	<li class="${loginTab}"><a href="login">Login</a></li>
-        	<li class="${createTab}"><a href="create">Sign In</a></li>
+        	<li class="${createTab}"><a href="create">Sign Up</a></li>
         <% } %>
        </ul>
      </div><!--/.nav-collapse -->
