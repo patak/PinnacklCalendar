@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.mail.MessagingException;
 import javax.servlet.ServletException;
@@ -202,6 +203,9 @@ public class EventServlet extends HttpServlet {
 				emails[emails.length - 1] = emails[emails.length - 1].replace("\"]", "");
 
 				if (emails.length > 0) {
+					User currentUser = (User) request.getSession().getAttribute(USER_SESSION);
+					List<Event> events = eventsDB.getEvents(currentUser.getId());
+					event = events.get(events.size() - 1);
 					for (String e : emails) {
 						Users usersDB = new Users();
 						User user = usersDB.getUserByEmail(e);
@@ -209,6 +213,7 @@ public class EventServlet extends HttpServlet {
 							Share share = new Share();
 							Shares shareDB = new Shares();
 							if (!shareDB.isUserEvent(user)) {
+
 								share.setEvent(event);
 								share.setOwner(event.getOrganizer());
 								share.setUser(user);
