@@ -35,6 +35,9 @@ $(document).ready(function () {
               var description = typeof evnt.description !== 'undefined' ? evnt.description : null;
               var sharedEvent = typeof evnt.sharedEvent !== 'undefined' ? evnt.sharedEvent : null;
               var sharedUsers = typeof evnt.sharedUsers !== 'undefined' ? evnt.sharedUsers : null;
+              var place = typeof evnt.place !== 'undefined' ? evnt.place : null;
+              var latitude = typeof evnt.latitude !== 'undefined' ? evnt.latitude : null;
+              var longitude = typeof evnt.longitude !== 'undefined' ? evnt.longitude : null;
               // ...
 
               var eventObj = {
@@ -43,6 +46,9 @@ $(document).ready(function () {
                 start: start,
                 end: end,
                 description: description,
+                place: place,
+                latitude: latitude,
+                longitude: longitude,
               };
 
               if (sharedEvent) {
@@ -91,6 +97,9 @@ $(document).ready(function () {
             <p>${computeDate(calEvent.start, calEvent.end)}</p>
             <p class="modal-section">Description</p>
             <p>${calEvent.description}</p>
+            <p class="modal-section">Place</p>
+            <p>${calEvent.place}</p>
+            <div id="map"></div>
             <p class="modal-section">Participant</p>
             <p>${friendsTpl}</p>
           </div>
@@ -99,6 +108,8 @@ $(document).ready(function () {
             <button type="button" class="btn btn-secondary"><a href="/PinnacklCalendar/edit?id=${calEvent.id}">Edit event</a></button>
           </div>
         </div><!-- /.modal-content -->
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
       `;
 
       // console.log(template);
