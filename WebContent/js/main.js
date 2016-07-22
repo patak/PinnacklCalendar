@@ -32,17 +32,19 @@ $(document).ready(function () {
               var end = typeof evnt.finishDate !== 'undefined' ? evnt.finishDate : null;
               var description = typeof evnt.description !== 'undefined' ? evnt.description : null;
               var sharedEvent = typeof evnt.sharedEvent !== 'undefined' ? evnt.sharedEvent : null;
+              var sharedUsers = typeof evnt.sharedUsers !== 'undefined' ? evnt.sharedUsers : null;
               // ...
 
               var eventObj = {
                 title: title,
                 start: start,
                 end: end,
-                description,
+                description: description,
               };
 
               if (sharedEvent) {
                 eventObj.color = "#F44336";
+                eventObj.sharedUsers = sharedUsers;
               }
 
               events.push(eventObj);
@@ -52,6 +54,26 @@ $(document).ready(function () {
       });
     },
     eventClick: function(calEvent, jsEvent, view) {
+
+      var friendsTpl = ""; 
+      if (calEvent.sharedUsers) {
+        for (var i = calEvent.sharedUsers.length - 1; i >= 0; i--) {
+          friendsTpl += `
+            <span class="user-circle tooltip">
+              <span class="tooltiptext">${calEvent.sharedUsers[i].pseudo}</span>
+              <span>${calEvent.sharedUsers[i].pseudo.charAt(0).toUpperCase()}</span>
+            </span>
+          `;
+        };
+      }
+
+      friendsTpl += `
+        <span class="user-circle tooltip">
+          <span class="tooltiptext">Add</span>
+          <span>+</span>
+        </span>
+      `;
+
       // Create a string template to generate the modal content
       var template = `
         <div class="modal-content">
@@ -66,6 +88,8 @@ $(document).ready(function () {
             <p>${computeDate(calEvent.start, calEvent.end)}</p>
             <p class="modal-section">Description</p>
             <p>${calEvent.description}</p>
+            <p class="modal-section">Participant</p>
+            <p>${friendsTpl}</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
