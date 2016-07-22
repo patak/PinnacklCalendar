@@ -58,7 +58,7 @@ $(document).ready(function () {
     },
     eventClick: function(calEvent, jsEvent, view) {
 
-      var friendsTpl = ""; 
+      var friendsTpl = "";
       if (calEvent.sharedUsers) {
         for (var i = calEvent.sharedUsers.length - 1; i >= 0; i--) {
           friendsTpl += `
@@ -153,7 +153,7 @@ $(document).ready(function () {
   }
 
   /**
-   * Compute the date string Date start - Date end 
+   * Compute the date string Date start - Date end
    * @param  {Moment} dateStartObject  [description]
    * @param  {Moment} dateFinishObject [description]
    * @return {String}                  [description]
@@ -223,9 +223,9 @@ $(document).ready(function () {
     // map-canvas est le conteneur HTML de la carte Google Map
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   }
-   
+
   function findPlace() {
-    // Réinitialisation du marqueur   
+    // Réinitialisation du marqueur
     if(marker != null)
       marker.setMap(null);
     // Récupération de l'adresse tapée dans le formulaire

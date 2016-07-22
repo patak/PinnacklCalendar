@@ -19,21 +19,21 @@
 		  <div class="form-group">
 		    <label for="name" class="col-md-2 control-label required"><em>*</em>Name</label>
 		    <div class="col-md-8">
-		      <input type="text" class="form-control" id="name" placeholder="Name" name="name" required>
+		      <input type="text" class="form-control" id="name" placeholder="Name" name="name" value="${event.name}" required>
 		    </div>
 		  </div>
 		  
 		  <div class="form-group">
 		    <label for="description" class="col-md-2 control-label">Description</label>
 		    <div class="col-md-8">
-		      <textarea class="form-control" rows="3" id="description" name="description"></textarea>
+		      <textarea class="form-control" rows="3" id="description" name="description">${event.description}</textarea>
 		    </div>
 		  </div>
 		  
 		  <div class="form-group">
 		    <label for="place" class="col-md-2 control-label required"><em>*</em>Place</label>
 		    <div class="col-md-8">
-		      <input type="text" class="form-control" id="place" placeholder="Place" name="place" required>
+		      <input type="text" class="form-control" id="place" placeholder="Place" name="place" value="${event.place}" required>
 		    </div>
 		  </div>
 		  
@@ -54,15 +54,15 @@
 			  	<span id="text_latlng"></span>
 			  	<div id="map-canvas" style="height:300px;width:100%"></div>
 			  </div>
-			  <input type="hidden" name="latitude" id="latitude" value="">
-			  <input type="hidden" name="longitude" id="longitude" value="">
+			  <input type="hidden" name="latitude" id="latitude" value="${event.latitude}" >
+			  <input type="hidden" name="longitude" id="longitude" value="${event.longitude}" >
 		  </div>
 		  
 		  <div class="form-group">
 	  		<label for="startDate" class="col-md-2 control-label required"><em>*</em>Start Date</label>
 		    <div class="col-md-8">
               <div class='input-group date' id='datetimepickerStart'>
-                  <input type='text' class="form-control" id="startDate" name="startDate" required>
+                  <input type='text' class="form-control" id="startDate" name="startDate" value="${startDate}" required>
                   <span class="input-group-addon">
                       <button type="button" class="btn btn-default glyphicon glyphicon-calendar"></button>
                   </span>
@@ -74,7 +74,7 @@
 	  		<label for="finishDate" class="col-md-2 control-label">Finish Date</label>
 		    <div class="col-md-8">
               <div class='input-group date' id='datetimepickerFinish'>
-                  <input type='text' class="form-control" id="finishDate" name="finishDate"/>
+                  <input type='text' class="form-control" id="finishDate" name="finishDate" value="${finishDate}" />
                   <span class="input-group-addon">
 	                  <button type="button" class="btn btn-default glyphicon glyphicon-calendar"></button>
                   </span>
@@ -95,6 +95,10 @@
 		      <input type="text" class="form-control" id="share" name="share">
 		    </div>
 		  </div>
+		  
+		  <% if (request.getAttribute("action") == "edit") { %>
+		  	<input type="hidden" class="form-control" id="id" name="id" value="${event.ID }">
+		  <% } %>
 
 		  <div class="form-group">
 		    <div class="col-md-10">

@@ -105,7 +105,7 @@ public class EventServlet extends HttpServlet {
 			Event event = new Event();
 			Events eventsDB = new Events();
 
-			if (name.isEmpty() || place.isEmpty() || startDateRequest.isEmpty()) {
+			if (name.trim().length() == 0 || place.trim().length() == 0 || startDateRequest.trim().length() == 0) {
 				request.setAttribute("errorMessage", "Set required fields");
 			} else {
 
@@ -162,7 +162,107 @@ public class EventServlet extends HttpServlet {
 	}
 
 	private void edit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		// TODO
+		request.setAttribute("action", "edit");
+		request.setAttribute("title", "Edit Event");
+		request.setAttribute("homeTab", "active");
+
+		Events eventsDB = new Events();
+		Event event = eventsDB.getEventByID(Integer.valueOf(request.getParameter("id")));
+
+		if (event == null) {
+			response.sendRedirect("/events");
+			return;
+		}
+
+		request.setAttribute("startDate", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(event.getStartDate()));
+		try {
+			request.setAttribute("finishDate", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(event.getFinishDate()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		if (request.getParameter("submit") != null) {
+			final String name = request.getParameter("name");
+			final String description = request.getParameter("description");
+			final String place = request.getParameter("place");
+			final String latitudeRequest = request.getParameter("latitude");
+			final String longitudeRequest = request.getParameter("longitude");
+			final String startDateRequest = request.getParameter("startDate");
+			final String finishDateRequest = request.getParameter("finishDate");
+			final Part photoRequest = request.getPart("photo");
+
+			Double latitude = null;
+			Double longitude = null;
+			if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
+				latitude = Double.parseDouble(latitudeRequest);
+				longitude = Double.parseDouble(latitudeRequest);
+			}
+
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+			// Date currentDate = new Date();
+			Date startDate = null;
+			Date finishDate = null;
+
+			InputStream photo = null; // input stream of the upload file
+			photo = photoRequest.getInputStream();
+
+			if (name.trim().length() == 0 || place.trim().length() == 0 || startDateRequest.trim().length() == 0) {
+				request.setAttribute("errorMessage", "Set required fields");
+			} else {
+
+				try {
+					startDate = simpleDateFormat.parse(startDateRequest);
+					// if (startDate.before(currentDate)) {
+					// request.setAttribute("errorMessage", "Wrong start
+					// date");
+					// request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request,
+					// response);
+					// }
+				} catch (Exception e) {
+					request.setAttribute("errorMessage", "Wrong date format");
+					response.sendRedirect("/edit?id=" + event.getID());
+					return;
+				}
+
+				if (finishDateRequest.length() > 0) {
+					try {
+						finishDate = simpleDateFormat.parse(finishDateRequest);
+						if (finishDate.before(startDate)) {
+							request.setAttribute("errorMessage", "Wrong finish date");
+							response.sendRedirect("/edit?id=" + event.getID());
+							return;
+						}
+					} catch (Exception e) {
+						request.setAttribute("errorMessage", "Wrong date format");
+						response.sendRedirect("/edit?id=" + event.getID());
+						return;
+					}
+				}
+
+				if (photoRequest.getSize() > 0) {
+					if (!photoRequest.getContentType().equals("image/jpeg")
+							&& !photoRequest.getContentType().equals("image/png")) {
+						request.setAttribute("errorMessage", "Wrong file format");
+						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
+					}
+				}
+
+				event.setName(name);
+				event.setDescription(description);
+				event.setPlace(place);
+				event.setLatitude(latitude);
+				event.setLongitude(longitude);
+				event.setStartDate(startDate);
+				event.setFinishDate(finishDate);
+				event.setPhoto(photo);
+				event.setOrganizer((User) request.getSession().getAttribute(USER_SESSION));
+
+				eventsDB.updateEvent(event);
+				request.setAttribute("success", "Event succesfully updated");
+			}
+		}
+		request.setAttribute("event", event);
+		request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 	}
 
 	private void events(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

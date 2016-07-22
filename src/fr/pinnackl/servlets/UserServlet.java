@@ -90,7 +90,7 @@ public class UserServlet extends HttpServlet {
 
 		if (pseudo == null || password == null) {
 			// Display form
-		} else if (pseudo.isEmpty() || password.isEmpty()) {
+		} else if (pseudo.trim().length() == 0 || password.trim().length() == 0) {
 			request.setAttribute("errorMessage", "Set username and password");
 		} else if (usersDB.checkPseudo(pseudo)) {
 			if (usersDB.checkPseudoWithPassword(pseudo, password)) {
@@ -122,7 +122,7 @@ public class UserServlet extends HttpServlet {
 		Users usersDB = new Users();
 
 		if (email != null && pseudo != null && password != null) {
-			if (email.isEmpty() || pseudo.isEmpty() || password.isEmpty()) {
+			if (email.trim().length() == 0 || pseudo.trim().length() == 0 || password.trim().length() == 0) {
 				request.setAttribute("errorMessage", "Set all required fields");
 			} else if (!EmailValidator.getInstance().isValid(email)) {
 				request.setAttribute("errorMessage", "Wrong email format");
@@ -172,7 +172,8 @@ public class UserServlet extends HttpServlet {
 
 		if (currentPassword == null || newPassword == null || confirmNewPassword == null) {
 			// just display the login
-		} else if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmNewPassword.isEmpty()) {
+		} else if (currentPassword.trim().length() == 0 || newPassword.trim().length() == 0
+				|| confirmNewPassword.trim().length() == 0) {
 			request.setAttribute("errorMessage", "Set all fields");
 		} else if (usersDB.checkPseudoWithPassword(user.getPseudo(), currentPassword)) {
 			if (newPassword.equals(confirmNewPassword)) {
