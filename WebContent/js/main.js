@@ -213,8 +213,12 @@ $(document).ready(function () {
   // initialisation de la carte Google Map de départ
   function initMap() {
     geocoder = new google.maps.Geocoder();
-    // Ici j'ai mis la latitude et longitude du vieux Port de Marseille pour centrer la carte de départ
-    var latlng = new google.maps.LatLng(48.856614, 2.3522219000000177);
+    // Ici j'ai mis la latitude et longitude
+    if(document.getElementById('latitude').value && document.getElementById('longitude').value) {
+    	var latlng = new google.maps.LatLng(document.getElementById('latitude').value, document.getElementById('longitude').value);
+    } else {
+    	var latlng = new google.maps.LatLng(48.856614, 2.3522219000000177);
+    }
     var mapOptions = {
       zoom      : 14,
       center    : latlng,
@@ -222,6 +226,14 @@ $(document).ready(function () {
     }
     // map-canvas est le conteneur HTML de la carte Google Map
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    
+    if(document.getElementById('latitude').value && document.getElementById('longitude').value) {
+    	// Création du marqueur du lieu (épingle)
+        marker = new google.maps.Marker({
+            map: map,
+            position: latlng
+        });
+    }
   }
 
   function findPlace() {

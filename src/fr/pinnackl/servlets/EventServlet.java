@@ -43,11 +43,11 @@ public class EventServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		final String uri = request.getRequestURI();
-		System.out.println(request.getRequestURI());
-		System.out.println(request.getContextPath());
-		System.out.println(request.getServletPath());
-		System.out.println(request.getQueryString());
-		System.out.println(request.getParameter("id"));
+		// System.out.println(request.getRequestURI());
+		// System.out.println(request.getContextPath());
+		// System.out.println(request.getServletPath());
+		// System.out.println(request.getQueryString());
+		// System.out.println(request.getParameter("id"));
 		if (request.getSession().getAttribute(USER_SESSION) == null) {
 			response.sendRedirect("login");
 			return;
@@ -91,7 +91,7 @@ public class EventServlet extends HttpServlet {
 			Double longitude = null;
 			if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
 				latitude = Double.parseDouble(latitudeRequest);
-				longitude = Double.parseDouble(latitudeRequest);
+				longitude = Double.parseDouble(longitudeRequest);
 			}
 
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -180,6 +180,12 @@ public class EventServlet extends HttpServlet {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		try {
+			request.setAttribute("latitude", String.valueOf(event.getLatitude()));
+			request.setAttribute("longitude", String.valueOf(event.getLongitude()));
+		} catch (Exception e) {
+
+		}
 
 		if (request.getParameter("submit") != null) {
 			final String name = request.getParameter("name");
@@ -195,7 +201,7 @@ public class EventServlet extends HttpServlet {
 			Double longitude = null;
 			if (latitudeRequest.length() > 0 && longitudeRequest.length() > 0) {
 				latitude = Double.parseDouble(latitudeRequest);
-				longitude = Double.parseDouble(latitudeRequest);
+				longitude = Double.parseDouble(longitudeRequest);
 			}
 
 			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -220,7 +226,7 @@ public class EventServlet extends HttpServlet {
 					// }
 				} catch (Exception e) {
 					request.setAttribute("errorMessage", "Wrong date format");
-					response.sendRedirect("/edit?id=" + event.getID());
+					response.sendRedirect("edit?id=" + event.getID());
 					return;
 				}
 
@@ -229,12 +235,12 @@ public class EventServlet extends HttpServlet {
 						finishDate = simpleDateFormat.parse(finishDateRequest);
 						if (finishDate.before(startDate)) {
 							request.setAttribute("errorMessage", "Wrong finish date");
-							response.sendRedirect("/edit?id=" + event.getID());
+							response.sendRedirect("edit?id=" + event.getID());
 							return;
 						}
 					} catch (Exception e) {
 						request.setAttribute("errorMessage", "Wrong date format");
-						response.sendRedirect("/edit?id=" + event.getID());
+						response.sendRedirect("edit?id=" + event.getID());
 						return;
 					}
 				}
