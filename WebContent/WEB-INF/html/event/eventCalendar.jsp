@@ -22,6 +22,7 @@
 			<button id="dayButton" class="btn btn-default">Day</button>
 		</div>
 	</div>
+	<div><a class="btn btn-primary" href="add">Create an envent</a></div>
 	<div id="calendar">
 	</div>
 	<div id="showEventModal" class="modal fade">
