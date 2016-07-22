@@ -88,6 +88,13 @@
 		      <input type="file" class="form-control" id="photo" name="photo">
 		    </div>
 		  </div>
+          
+          <div class="form-group dark-text">
+		    <label for="photo" class="col-md-2 control-label">Share</label>
+		    <div class="col-md-8">
+		      <input type="text" class="form-control" id="share" name="share">
+		    </div>
+		  </div>
 
 		  <div class="form-group">
 		    <div class="col-md-10">

@@ -188,3 +188,7 @@ body .dtp-select-minute[fill="#8BC34A"], body .dtp-select-hour[fill="#8BC34A"] {
   vertical-align: bottom;
   margin-right: 6px;
 }
+
+.dark-text {
+  color: #000000 !important;
+}
