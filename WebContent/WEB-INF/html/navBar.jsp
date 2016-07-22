@@ -13,19 +13,17 @@
      </div>
      <div id="navbar" class="collapse navbar-collapse">
        <ul class="nav navbar-nav">
-         <li class="${homeTab}"><a href="home">Home</a></li>
+         <% if (request.getSession().getAttribute("userSession") != null) { %>
+         	<li class="${homeTab}"><a href="home">Home</a></li>
+         	<li class="${eventsTab}"><a href="events">Events</a></li>
+         <% } %>
         <% if (request.getSession().getAttribute("userSession") != null){ %>
+        	<li class="${changeTab}"><a href="change">Change Password</a></li>
         	<li><a href="logout">Logout</a></li>
         <% } else { %>
         	<li class="${loginTab}"><a href="login">Login</a></li>
+        	<li class="${createTab}"><a href="create">Sign In</a></li>
         <% } %>
-        <li class="${listTab}"><a href="list">List user</a></li>
-        <% if (request.getSession().getAttribute("userSession") != null){ %>
-        	<li class="${changeTab}"><a href="change">Change Password</a></li>
-        <% } else { %>
-        	<li class="${createTab}"><a href="create">Create User</a></li>
-        <% } %>
-          <li class="${eventsTab}"><a href="events">Events</a></li>
        </ul>
      </div><!--/.nav-collapse -->
    </div>
