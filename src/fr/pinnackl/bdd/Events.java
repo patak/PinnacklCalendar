@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,22 +77,77 @@ public class Events {
 		}
 	}
 
-	public List<Event> getEvents(Integer userId) {
-		List<Event> events = new ArrayList<Event>();
+	public void updateEvent(Event event) {
 
-		// DB Connection
 		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
 
 		loadDatabase();
 
 		try {
 			preparedStatement = connection.prepareStatement(
-					"SELECT e.*, sh.* FROM events as e LEFT JOIN shared as sh ON (sh.user_id = ?) WHERE e.organizer_id = ? OR e.organizer_id = sh.owner_id;");
-			preparedStatement.setLong(1, userId);
-			preparedStatement.setLong(2, userId);
+					"UPDATE events SET name = ?, description = ?, place = ?, latitude = ?, longitude = ?, startDate = ?, finishDate = ?, photo = ?, organizer_id = ? WHERE event_id = ?;");
+			preparedStatement.setString(1, event.getName());
+			preparedStatement.setString(2, event.getDescription());
+			preparedStatement.setString(3, event.getPlace());
+			try {
+				preparedStatement.setDouble(4, event.getLatitude());
+				preparedStatement.setDouble(5, event.getLongitude());
+			} catch (Exception e) {
+				preparedStatement.setDouble(4, 0);
+				preparedStatement.setDouble(5, 0);
+			}
+			preparedStatement.setDate(6, new Date(event.getStartDate().getTime()));
+			try {
+				preparedStatement.setDate(7, new Date(event.getFinishDate().getTime()));
+			} catch (Exception e) {
+				preparedStatement.setDate(7, null);
+			}
+			preparedStatement.setBlob(8, event.getPhoto());
+			preparedStatement.setInt(9, event.getOrganizer().getId());
+			preparedStatement.setInt(10, event.getID());
 
-			result = preparedStatement.executeQuery();
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			// Close Connection
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+
+			} catch (SQLException e2) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+	public List<Event> getEvents(Integer userId) {
+		List<Event> events = new ArrayList<Event>();
+
+		// DB Connection
+		PreparedStatement preparedStatement = null;
+		Statement statement = null;
+
+		ResultSet result = null;
+
+		loadDatabase();
+
+		try {
+			if (userId != null) {
+				preparedStatement = connection.prepareStatement(
+						"SELECT e.*, sh.* FROM events as e LEFT JOIN shared as sh ON (sh.user_id = ?) WHERE e.organizer_id = ? OR e.organizer_id = sh.owner_id;");
+				preparedStatement.setLong(1, userId);
+				preparedStatement.setLong(2, userId);
+
+				result = preparedStatement.executeQuery();
+			} else {
+				statement = connection.createStatement();
+				result = statement.executeQuery("SELECT * FROM events");
+			}
 
 			// Retrieve Datas
 			while (result.next()) {
@@ -138,6 +194,8 @@ public class Events {
 					result.close();
 				if (preparedStatement != null)
 					preparedStatement.close();
+				if (statement != null)
+					statement.close();
 				if (connection != null)
 					connection.close();
 
@@ -148,8 +206,12 @@ public class Events {
 		return events;
 	}
 
+	public List<Event> getEvents() {
+		return getEvents(null);
+	}
+
 	public Event getEventByID(Integer eventID) {
-		for (Event e : getEvents(eventID)) {
+		for (Event e : getEvents()) {
 			if (e.getID().equals(eventID)) {
 				return e;
 			}
