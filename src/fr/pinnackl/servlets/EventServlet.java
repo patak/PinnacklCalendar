@@ -76,7 +76,7 @@ public class EventServlet extends HttpServlet {
 	private void add(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		request.setAttribute("action", "add");
 		request.setAttribute("title", "Add Event");
-		request.setAttribute("homeTab", "active");
+		request.setAttribute("eventsTab", "active");
 		if (request.getParameter("submit") != null) {
 			final String name = request.getParameter("name");
 			final String description = request.getParameter("description");
@@ -137,7 +137,8 @@ public class EventServlet extends HttpServlet {
 				}
 
 				if (photoRequest.getSize() > 0) {
-					if (!photoRequest.getContentType().equals("image/jpeg") && !photoRequest.getContentType().equals("image/png")) {
+					if (!photoRequest.getContentType().equals("image/jpeg")
+							&& !photoRequest.getContentType().equals("image/png")) {
 						request.setAttribute("errorMessage", "Wrong file format");
 						request.getRequestDispatcher("/WEB-INF/html/event/eventForm.jsp").forward(request, response);
 					}
